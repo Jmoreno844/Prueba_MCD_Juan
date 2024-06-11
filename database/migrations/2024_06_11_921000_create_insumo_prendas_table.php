@@ -20,6 +20,9 @@ class CreateInsumoPrendasTable extends Migration
             $table->foreign("IdInsumoFK")->references("id")->on("insumo");
             $table->foreign("IdPrendaFK")->references("id")->on("prenda");
             $table->timestamps();
+
+            // Definir la clave primaria compuesta
+            $table->primary(['IdInsumoFK', 'IdPrendaFK']);
         });
     }
 

@@ -19,6 +19,9 @@ class CreateInsumoProveedorTable extends Migration
             $table->foreign("IdInsumoFK")->references("id")->on("insumo");
             $table->foreign("IdProveedorFK")->references("id")->on("proveedor");
             $table->timestamps();
+
+            // Definir la clave primaria compuesta
+            $table->primary(['IdInsumoFK', 'IdProveedorFK']);
         });
     }
 

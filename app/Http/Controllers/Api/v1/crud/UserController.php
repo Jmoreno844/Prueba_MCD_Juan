@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\v1;
 use Hash, Session;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Api\v1\Controller;
 use Auth;
 class UserController extends Controller
 {
