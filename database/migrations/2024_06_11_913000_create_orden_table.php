@@ -17,9 +17,11 @@ class CreateOrdenTable extends Migration
             $table->id();
             $table->date('fecha');
             $table->unsignedBigInteger('IdEmpleadoFK');
-            $table->unsignedBigInteger('idEstadoFK');
+            $table->unsignedBigInteger('IdClienteFK');
+            $table->unsignedBigInteger('IdEstadoFK');
             $table->foreign('IdEmpleadoFK')->references('id')->on('empleado');
             $table->foreign('IdEstadoFK')->references('id')->on('estado');
+            $table->foreign('IdClienteFK')->references('id')->on('cliente');
             $table->timestamps();
         });
     }

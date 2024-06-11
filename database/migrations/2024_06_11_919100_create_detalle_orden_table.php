@@ -17,10 +17,10 @@ class CreateDetalleOrdenTable extends Migration
             $table->id();
             $table->unsignedBigInteger('IdOrdenFK');
             $table->unsignedBigInteger('IdPrendaFK');
-            $table->integer('cantidad_requerida');
-            $table->integer('cantidad_producir');
             $table->unsignedBigInteger('IdColorFK');
             $table->unsignedBigInteger('IdTallaFK');
+            $table->integer('PrendaId');
+            $table->integer('cantidad_producir');
             $table->integer('cantidad_producida');
             $table->unsignedBigInteger('IdEstadoFK');
             $table->foreign('IdOrdenFK')->references('id')->on('orden');

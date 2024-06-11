@@ -21,11 +21,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['middleware' => ['json.response', 'auth:api', 'api.version']], function () {
+
     Route::get('/check', function (Request $request) {
         $version = $request->route('version');
         $controller = $version === 'v2' ? UserControllerV2::class : UserControllerV1::class;
         return app()->call([$controller, 'check']);
     });
+    
 });
 
 Route::group(['middleware' => ['json.response', 'api.version']], function () {
