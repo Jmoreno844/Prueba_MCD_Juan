@@ -15,19 +15,11 @@ class ApiVersion
      * @param  \Closure  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle(Request $request, Closure $next)
-    {
-        // Obtener la versión de la API desde la cadena de consulta
-        $version = $request->query('version', 'v1');
+    public function handle($request, Closure $next)
+{
+    $version = $request->header('X-API-Version', 'V1');
+    $request->attributes->set('api_version', $version);
 
-        // Establecer el espacio de nombres del controlador basado en la versión
-        $namespace = 'App\Http\Controllers\Api\\' . strtoupper($version);
-
-        // Aplicar el namespace a las rutas del grupo
-        Route::group(['namespace' => $namespace], function () use ($request, $next) {
-            return $next($request);
-        });
-
-        return $next($request);
-    }
+    return $next($request);
+}
 }
