@@ -16,7 +16,7 @@ class VentaController extends Controller
         return response()->json($venta);
     }
 
-    public function create(Request $request)
+    public function store(Request $request)
     {
         try {
             $validatedData = $request->validate([

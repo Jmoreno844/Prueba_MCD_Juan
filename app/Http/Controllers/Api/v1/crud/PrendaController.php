@@ -16,7 +16,7 @@ class PrendaController extends Controller
         return response()->json($prenda);
     }
 
-    public function create(Request $request)
+    public function store(Request $request)
     {
         try {
             $validatedData = $request->validate([

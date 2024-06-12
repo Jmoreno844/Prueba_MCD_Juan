@@ -16,7 +16,7 @@ class TipoProteccionController extends Controller
         return response()->json($tipoProteccion);
     }
 
-    public function create(Request $request)
+    public function store(Request $request)
     {
         try {
             $validatedData = $request->validate([

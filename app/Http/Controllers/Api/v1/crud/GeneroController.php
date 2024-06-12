@@ -16,7 +16,7 @@ class GeneroController extends Controller
         return response()->json($generos);
     }
 
-    public function create(Request $request)
+    public function store(Request $request)
     {
         try {
             $validatedData = $request->validate([

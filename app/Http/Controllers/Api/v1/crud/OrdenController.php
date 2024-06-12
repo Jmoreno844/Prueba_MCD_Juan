@@ -16,7 +16,7 @@ class OrdenController extends Controller
         return response()->json($orden);
     }
 
-    public function create(Request $request)
+    public function store(Request $request)
     {
         try {
             $validatedData = $request->validate([

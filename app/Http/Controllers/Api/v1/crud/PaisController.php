@@ -16,7 +16,7 @@ class PaisController extends Controller
         return response()->json($pais);
     }
 
-    public function create(Request $request)
+    public function store(Request $request)
     {
         try {
             $validatedData = $request->validate([

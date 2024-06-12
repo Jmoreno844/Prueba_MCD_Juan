@@ -16,7 +16,7 @@ class CargoController extends Controller
         return response()->json($cargos);
     }
 
-    public function create(Request $request)
+    public function store(Request $request)
     {
         try {
             $validatedData = $request->validate([

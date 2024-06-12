@@ -16,7 +16,7 @@ class FormaPagoController extends Controller
         return response()->json($forma_pagos);
     }
 
-    public function create(Request $request)
+    public function store(Request $request)
     {
         try {
             $validatedData = $request->validate([

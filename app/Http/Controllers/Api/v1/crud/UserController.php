@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\v1;
+namespace App\Http\Controllers\Api\v1\crud;
 use Hash, Session;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -25,22 +25,52 @@ class UserController extends Controller
 
 
 
-    public function login(Request $request)
-    {
-        $validator = $request->validate([
-            'email' => 'required',
-            'password' => 'required',
-        ]);
 
-        if (!$token = auth('api')->attempt($validator)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
+public function login(Request $request)
+{
+    $credentials = $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
 
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-        ]);
+    if (Auth::attempt($credentials)) {
+        $request->session()->regenerate();
+
+        return response()->json(['message' => 'Logeado existosamente.']);
     }
+
+    return response()->json(['message' => 'Credenciales invalidas.'], 401);
+}
+
+
+public function generateJWT(Request $request)
+{
+    $credentials = $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
+
+    // Verificar si las credenciales son válidas
+    if (!Auth::attempt($credentials)) {
+        return response()->json(['message' => 'Credenciales invalidas.'], 401);
+    }
+
+    // Obtener el usuario autenticado
+    $user = Auth::user();
+
+    // Verificar si el usuario tiene permiso para usar JWT
+    if (!$user->jwt_permission) {
+        return response()->json(['message' => "El usuario no tiene permiso JWT"], 403);
+    }
+
+    // Generar el token JWT
+    $token = auth('api')->login($user);
+
+    return response()->json([
+        'access_token' => $token,
+        'token_type' => 'Bearer',
+    ]);
+}
 
         public function check(Request $request)
         {

@@ -15,7 +15,7 @@ class ClienteController extends Controller
         return response()->json($clientes);
     }
 
-    public function create(Request $request)
+    public function store(Request $request)
     {
         try {
             $validatedData = $request->validate([

@@ -15,7 +15,7 @@ class ColorController extends Controller
         return response()->json($colores);
     }
 
-    public function create(Request $request)
+    public function store(Request $request)
     {
         try {
             $validatedData = $request->validate([
@@ -39,4 +39,34 @@ class ColorController extends Controller
         $color = DB::table('color')->where('id', $id)->first();
         return response()->json($color);
     }
+
+
+public function update(Request $request, $id)
+{
+    try {
+        $validatedData = $request->validate([
+            'Descripcion' => 'required|max:255',
+        ]);
+
+        $color = DB::table('color')->where('id', $id)->update([
+            'Descripcion' => $validatedData['Descripcion'],
+        ]);
+
+        return response()->json($color);
+    } catch (ValidationException $e) {
+        return response()->json(['message' => $e->errors()], 422);
+    } catch (\Exception $e) {
+        return response()->json(['message' => $e->getMessage()], 500);
+    }
+}
+
+public function destroy($id)
+{
+    try {
+        DB::table('color')->where('id', $id)->delete();
+        return response()->json(['message' => 'Color eliminado.']);
+    } catch (\Exception $e) {
+        return response()->json(['message' => $e->getMessage()], 500);
+    }
+}
 }

@@ -15,7 +15,7 @@ class EmpleadoController extends Controller
         return response()->json($empleados);
     }
 
-    public function create(Request $request)
+    public function store(Request $request)
     {
         try {
             $validatedData = $request->validate([

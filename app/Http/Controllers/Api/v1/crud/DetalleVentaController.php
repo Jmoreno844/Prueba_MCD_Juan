@@ -15,7 +15,7 @@ class DetalleVentaController extends Controller
         return response()->json($detalle_ventas);
     }
 
-    public function create(Request $request)
+    public function store(Request $request)
     {
         try {
             $validatedData = $request->validate([

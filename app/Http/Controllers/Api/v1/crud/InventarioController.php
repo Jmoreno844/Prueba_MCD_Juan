@@ -16,7 +16,7 @@ class InventarioController extends Controller
         return response()->json($inventario);
     }
 
-    public function create(Request $request)
+    public function store(Request $request)
     {
         try {
             $validatedData = $request->validate([

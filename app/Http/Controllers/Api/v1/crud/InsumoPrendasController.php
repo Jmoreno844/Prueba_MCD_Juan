@@ -16,7 +16,7 @@ class InsumoPrendasController extends Controller
         return response()->json($insumoPrendas);
     }
 
-    public function create(Request $request)
+    public function store(Request $request)
     {
         try {
             $validatedData = $request->validate([

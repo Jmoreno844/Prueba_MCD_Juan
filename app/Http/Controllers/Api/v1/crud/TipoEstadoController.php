@@ -16,7 +16,7 @@ class TipoEstadoController extends Controller
         return response()->json($tipoEstado);
     }
 
-    public function create(Request $request)
+    public function store(Request $request)
     {
         try {
             $validatedData = $request->validate([

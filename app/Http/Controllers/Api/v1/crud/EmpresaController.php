@@ -16,7 +16,7 @@ class EmpresaController extends Controller
         return response()->json($empresas);
     }
 
-    public function create(Request $request)
+    public function store(Request $request)
     {
         try {
             $validatedData = $request->validate([

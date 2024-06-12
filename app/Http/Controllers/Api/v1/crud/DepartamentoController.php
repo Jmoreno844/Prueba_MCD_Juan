@@ -15,7 +15,7 @@ class DepartamentoController extends Controller
         return response()->json($departamentos);
     }
 
-    public function create(Request $request)
+    public function store(Request $request)
     {
         try {
             $validatedData = $request->validate([

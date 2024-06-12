@@ -16,7 +16,7 @@ class EstadoController extends Controller
         return response()->json($estados);
     }
 
-    public function create(Request $request)
+    public function store(Request $request)
     {
         try {
             $validatedData = $request->validate([
