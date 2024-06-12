@@ -28,7 +28,6 @@ class CreateDetalleOrdenTable extends Migration
             $table->foreign('IdColorFK')->references('id')->on('color');
             $table->foreign('IdTallaFK')->references('id')->on('talla');
             $table->foreign('IdEstadoFK')->references('id')->on('estado');
-            $table->timestamps();
         });
     }
 

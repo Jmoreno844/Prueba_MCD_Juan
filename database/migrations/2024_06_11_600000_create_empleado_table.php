@@ -21,7 +21,6 @@ class CreateEmpleadoTable extends Migration
             $table->unsignedBigInteger('IdMunicipioFK');
             $table->foreign('idCargoFK')->references('id')->on('cargos');
             $table->foreign('IdMunicipioFK')->references('id')->on('municipio');
-            $table->timestamps();
         });
     }
 

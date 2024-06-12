@@ -16,7 +16,6 @@ class CreateTipoPersonaTable extends Migration
     Schema::create('tipo_persona', function (Blueprint $table) {
         $table->id();
         $table->string('nombre', 50);
-        $table->timestamps();
     });
 }
 

@@ -23,7 +23,6 @@ use App\Http\Controllers\Api\v1\crud\TipoProteccionController;
 use App\Http\Controllers\Api\v1\crud\VentaController;
 use App\Http\Controllers\Api\v1\crud\ProveedorController;
 use App\Http\Controllers\Api\v1\crud\TallaController;
-use App\Http\Controllers\Api\v1\crud\TipoEstadoController;
 use App\Http\Controllers\Api\v1\crud\TipoPersonaController;
 use App\Http\Controllers\Api\v1\crud\InsumoProveedorController;
 
@@ -72,7 +71,6 @@ Route::group(['middleware' => ['json.response', 'auth:api']], function () {
     Route::apiResource("prenda", PrendaController::class);
     Route::apiResource("proveedor", ProveedorController::class);
     Route::apiResource("talla", TallaController::class);
-    Route::apiResource("tipoEstado", TipoEstadoController::class);
     Route::apiResource("tipoPersona", TipoPersonaController::class);
     Route::apiResource("tipoProteccion", TipoProteccionController::class);
     Route::apiResource("venta", VentaController::class);

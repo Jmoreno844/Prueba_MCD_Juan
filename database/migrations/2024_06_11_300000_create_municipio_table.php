@@ -18,7 +18,6 @@ class CreateMunicipioTable extends Migration
             $table->string('nombre', 50);
             $table->unsignedBigInteger('idDepartamentoFK');
             $table->foreign('idDepartamentoFK')->references('id')->on('departamento');
-            $table->timestamps();
         });
     }
 

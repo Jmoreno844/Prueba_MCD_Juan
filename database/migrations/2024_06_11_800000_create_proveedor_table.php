@@ -21,7 +21,6 @@ class CreateProveedorTable extends Migration
             $table->unsignedBigInteger('IdMunicipioFK');
             $table->foreign('IdTipoPersona')->references('id')->on('tipo_persona');
             $table->foreign('IdMunicipioFK')->references('id')->on('municipio');
-            $table->timestamps();
         });
     }
 

@@ -18,7 +18,6 @@ class CreateDepartamentoTable extends Migration
         $table->string('nombre', 50);
         $table->unsignedBigInteger('IdPaisFK');
         $table->foreign('IdPaisFK')->references('id')->on('pais');
-        $table->timestamps();
     });
 }
 

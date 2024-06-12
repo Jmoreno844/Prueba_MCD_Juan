@@ -16,7 +16,6 @@ class CreateTipoProteccionTable extends Migration
         Schema::create('tipo_proteccion', function (Blueprint $table) {
             $table->id();
             $table->string('Descripcion', 50);
-            $table->timestamps();
         });
     }
 

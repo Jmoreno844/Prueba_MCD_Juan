@@ -25,7 +25,6 @@ class CreatePrendaTable extends Migration
             $table->foreign('IdEstadoFK')->references('id')->on('estado');
             $table->foreign('IdTipoProteccionFK')->references('id')->on('tipo_proteccion');
             $table->foreign('IdGeneroFK')->references('id')->on('genero');
-            $table->timestamps();
         });
     }
 

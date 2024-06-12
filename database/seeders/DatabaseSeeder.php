@@ -25,7 +25,6 @@ class DatabaseSeeder extends Seeder
             ClienteSeeder::class,
             FormaPagoSeeder::class,
             VentaSeeder::class,
-            TipoEstadoSeeder::class,
             EstadoSeeder::class,
             OrdenSeeder::class,
             ColorSeeder::class,

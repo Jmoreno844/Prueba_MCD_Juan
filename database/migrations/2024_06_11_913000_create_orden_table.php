@@ -22,7 +22,6 @@ class CreateOrdenTable extends Migration
             $table->foreign('IdEmpleadoFK')->references('id')->on('empleado');
             $table->foreign('IdEstadoFK')->references('id')->on('estado');
             $table->foreign('IdClienteFK')->references('id')->on('cliente');
-            $table->timestamps();
         });
     }
 

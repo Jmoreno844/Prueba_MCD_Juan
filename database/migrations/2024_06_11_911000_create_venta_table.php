@@ -22,7 +22,6 @@ class CreateVentaTable extends Migration
             $table->foreign('IdEmpleadoFK')->references('id')->on('empleado');
             $table->foreign('IdClienteFK')->references('id')->on('cliente');
             $table->foreign('IdFormaPagoFK')->references('id')->on('forma_pago');
-            $table->timestamps();
         });
     }
 

@@ -20,7 +20,6 @@ class CreateDetalleVentaTable extends Migration
             $table->integer('Cantidad');
             $table->foreign('IdVentaFK')->references('id')->on('venta');
             $table->foreign('IdInventarioFK')->references('id')->on('inventario');
-            $table->timestamps();
         });
     }
 

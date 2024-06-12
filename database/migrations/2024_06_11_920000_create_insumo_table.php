@@ -16,7 +16,6 @@ class CreateInsumoTable extends Migration
         Schema::create('insumo', function (Blueprint $table) {
             $table->id();
             $table->string('Nombre', 50);
-            $table->timestamps();
             $table->double("valor_unit");
             $table->double("stock_min");
             $table->double("stock_max");

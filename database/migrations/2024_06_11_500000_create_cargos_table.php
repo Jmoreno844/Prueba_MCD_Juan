@@ -17,7 +17,6 @@ class CreateCargosTable extends Migration
         $table->id();
         $table->string('descripcion', 50);
         $table->double('sueldo_base');
-        $table->timestamps();
     });
 }
 

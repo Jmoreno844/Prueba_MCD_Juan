@@ -16,7 +16,6 @@ class CreateTallaTable extends Migration
         Schema::create('talla', function (Blueprint $table) {
             $table->id();
             $table->string('Descripcion', 50);
-            $table->timestamps();
         });
     }
 

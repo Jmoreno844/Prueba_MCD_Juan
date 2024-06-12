@@ -21,7 +21,6 @@ class CreateEmpresaTable extends Migration
         $table->date('FechaCreacion');
         $table->unsignedBigInteger('IdMunicipioFK');
         $table->foreign('IdMunicipioFK')->references('id')->on('municipio');
-        $table->timestamps();
     });
 }
 

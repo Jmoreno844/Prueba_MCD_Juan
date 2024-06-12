@@ -20,13 +20,10 @@ class EstadoController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'Descripcion' => 'required|max:50',
-                'IdTipoEstadoFK' => 'required|integer',
-            ]);
+                'Descripcion' => 'required|max:50',            ]);
 
             $estado = DB::table('estado')->insert([
                 'Descripcion' => $validatedData['Descripcion'],
-                'IdTipoEstadoFK' => $validatedData['IdTipoEstadoFK'],
             ]);
 
             return response()->json($estado);
@@ -48,12 +45,10 @@ class EstadoController extends Controller
         try {
             $validatedData = $request->validate([
                 'Descripcion' => 'required|max:50',
-                'IdTipoEstadoFK' => 'required|integer',
             ]);
 
             $estado = DB::table('estado')->where('id', $id)->update([
                 'Descripcion' => $validatedData['Descripcion'],
-                'IdTipoEstadoFK' => $validatedData['IdTipoEstadoFK'],
             ]);
 
             return response()->json($estado);

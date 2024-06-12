@@ -23,7 +23,6 @@ class CreateInventarioTable extends Migration
             $table->foreign("IdPrendaFK")->references("id")->on("prenda");
             $table->foreign("IdTallaFK")->references("id")->on("talla");
             $table->foreign("IdColorFK")->references("id")->on("color");
-            $table->timestamps();
         });
     }
 
