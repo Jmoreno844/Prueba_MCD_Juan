@@ -48,7 +48,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::group(['middleware' => ['json.response', 'auth:api']], function () {
+
+Route::group(['middleware' => ['json.response']], function () {
     Route::get("/check", [UserController::class, 'check'])->name("check");
 
     Route::apiResource('cargos', CargoController::class);
