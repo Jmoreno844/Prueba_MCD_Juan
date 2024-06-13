@@ -29,7 +29,16 @@ class PrendaController extends Controller
                 'Codigo' => 'required|string|max:50',
             ]);
 
-            $prenda = DB::table('prenda')->insertGetId($validatedData);
+            // Update the record in the 'prenda' table
+            $prenda = DB::table('prenda')->insert([
+                'Nombre' => $validatedData['Nombre'],
+                'ValorUnitCop' => $validatedData['ValorUnitCop'],
+                'ValorUnitUsd' => $validatedData['ValorUnitUsd'],
+                'IdEstadoFK' => $validatedData['IdEstadoFK'],
+                'IdTipoProteccionFK' => $validatedData['IdTipoProteccionFK'],
+                'IdGeneroFK' => $validatedData['IdGeneroFK'],
+                'Codigo' => $validatedData['Codigo'],
+            ]);
 
             return response()->json(['id' => $prenda], 201);
         } catch (ValidationException $e) {
@@ -58,7 +67,15 @@ class PrendaController extends Controller
                 'Codigo' => 'required|string|max:50',
             ]);
 
-            DB::table('prenda')->where('id', $id)->update($validatedData);
+            DB::table('prenda')->where('id', $id)->update([
+                'Nombre' => $validatedData['Nombre'],
+                'ValorUnitCop' => $validatedData['ValorUnitCop'],
+                'ValorUnitUsd' => $validatedData['ValorUnitUsd'],
+                'IdEstadoFK' => $validatedData['IdEstadoFK'],
+                'IdTipoProteccionFK' => $validatedData['IdTipoProteccionFK'],
+                'IdGeneroFK' => $validatedData['IdGeneroFK'],
+                'Codigo' => $validatedData['Codigo'],
+            ]);
 
             return response()->json(['message' => 'Prenda updated successfully.']);
         } catch (ValidationException $e) {

@@ -19,15 +19,15 @@ class DetalleVentaController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'IdVentaFK' => 'required|integer',
+                'IdVentaFk' => 'required|integer',
                 'IdInventarioFK' => 'required|integer',
-                'Cantidad' => 'required|integer',
+                'cantidad' => 'required|integer',
             ]);
 
             $detalle_venta = DB::table('detalle_venta')->insert([
-                'IdVentaFK' => $validatedData['IdVentaFK'],
+                'IdVentaFk' => $validatedData['IdVentaFk'],
                 'IdInventarioFK' => $validatedData['IdInventarioFK'],
-                'Cantidad' => $validatedData['Cantidad'],
+                'cantidad' => $validatedData['cantidad'],
             ]);
 
             return response()->json($detalle_venta);
@@ -48,15 +48,15 @@ class DetalleVentaController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'IdVentaFK' => 'required|integer',
+                'IdVentaFk' => 'required|integer',
                 'IdInventarioFK' => 'required|integer',
-                'Cantidad' => 'required|integer',
+                'cantidad' => 'required|integer',
             ]);
 
             $detalle_venta = DB::table('detalle_venta')->where('id', $id)->update([
-                'IdVentaFK' => $validatedData['IdVentaFK'],
+                'IdVentaFk' => $validatedData['IdVentaFk'],
                 'IdInventarioFK' => $validatedData['IdInventarioFK'],
-                'Cantidad' => $validatedData['Cantidad'],
+                'cantidad' => $validatedData['cantidad'],
             ]);
 
             return response()->json($detalle_venta);

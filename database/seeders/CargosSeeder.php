@@ -21,5 +21,6 @@ class CargosSeeder extends Seeder
             ['descripcion' => 'Recepcionista', 'sueldo_base' => 1200000],
             ['descripcion' => 'Mantenimiento', 'sueldo_base' => 900000]
         ]);
+
     }
 }

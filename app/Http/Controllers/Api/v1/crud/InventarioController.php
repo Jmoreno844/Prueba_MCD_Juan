@@ -21,7 +21,7 @@ class InventarioController extends Controller
         try {
             $validatedData = $request->validate([
                 'CodInv' => 'required|string|max:255',
-                'IdPrendaFK' => 'required|integer|exists:prenda,id',
+                'IdPrendaFk' => 'required|integer|exists:prenda,id',
                 'IdTallaFK' => 'required|integer|exists:talla,id',
                 'IdColorFK' => 'required|integer|exists:color,id',
                 'Cantidad' => 'required|integer',
@@ -29,7 +29,7 @@ class InventarioController extends Controller
 
             $inventario = DB::table('inventario')->insert([
                 'CodInv' => $validatedData['CodInv'],
-                'IdPrendaFK' => $validatedData['IdPrendaFK'],
+                'IdPrendaFk' => $validatedData['IdPrendaFk'],
                 'IdTallaFK' => $validatedData['IdTallaFK'],
                 'IdColorFK' => $validatedData['IdColorFK'],
                 'Cantidad' => $validatedData['Cantidad'],
@@ -54,7 +54,7 @@ class InventarioController extends Controller
         try {
             $validatedData = $request->validate([
                 'CodInv' => 'required|string|max:255',
-                'IdPrendaFK' => 'required|integer|exists:prenda,id',
+                'IdPrendaFk' => 'required|integer|exists:prenda,id',
                 'IdTallaFK' => 'required|integer|exists:talla,id',
                 'IdColorFK' => 'required|integer|exists:color,id',
                 'Cantidad' => 'required|integer',
@@ -62,7 +62,7 @@ class InventarioController extends Controller
 
             $inventario = DB::table('inventario')->where('id', $id)->update([
                 'CodInv' => $validatedData['CodInv'],
-                'IdPrendaFK' => $validatedData['IdPrendaFK'],
+                'IdPrendaFk' => $validatedData['IdPrendaFk'],
                 'IdTallaFK' => $validatedData['IdTallaFK'],
                 'IdColorFK' => $validatedData['IdColorFK'],
                 'Cantidad' => $validatedData['Cantidad'],

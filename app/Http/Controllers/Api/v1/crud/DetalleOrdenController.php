@@ -19,25 +19,25 @@ class DetalleOrdenController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'IdOrdenFK' => 'required|integer',
-                'IdPrendaFK' => 'required|integer',
+                'IdOrdenFk' => 'required|integer',
+                'IdPrendaFk' => 'required|integer',
                 'IdColorFK' => 'required|integer',
                 'IdTallaFK' => 'required|integer',
                 'PrendaId' => 'required|integer',
                 'cantidad_producir' => 'required|integer',
                 'cantidad_producida' => 'required|integer',
-                'IdEstadoFK' => 'required|integer',
+                'IdEstadoFk' => 'required|integer',
             ]);
 
             $detalle_orden = DB::table('detalle_orden')->insert([
-                'IdOrdenFK' => $validatedData['IdOrdenFK'],
-                'IdPrendaFK' => $validatedData['IdPrendaFK'],
+                'IdOrdenFk' => $validatedData['IdOrdenFk'],
+                'IdPrendaFk' => $validatedData['IdPrendaFk'],
                 'IdColorFK' => $validatedData['IdColorFK'],
                 'IdTallaFK' => $validatedData['IdTallaFK'],
                 'PrendaId' => $validatedData['PrendaId'],
                 'cantidad_producir' => $validatedData['cantidad_producir'],
                 'cantidad_producida' => $validatedData['cantidad_producida'],
-                'IdEstadoFK' => $validatedData['IdEstadoFK'],
+                'IdEstadoFk' => $validatedData['IdEstadoFk'],
             ]);
 
             return response()->json($detalle_orden);
@@ -58,25 +58,25 @@ class DetalleOrdenController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'IdOrdenFK' => 'required|integer',
-                'IdPrendaFK' => 'required|integer',
+                'IdOrdenFk' => 'required|integer',
+                'IdPrendaFk' => 'required|integer',
                 'IdColorFK' => 'required|integer',
                 'IdTallaFK' => 'required|integer',
                 'PrendaId' => 'required|integer',
                 'cantidad_producir' => 'required|integer',
                 'cantidad_producida' => 'required|integer',
-                'IdEstadoFK' => 'required|integer',
+                'IdEstadoFk' => 'required|integer',
             ]);
 
             $detalle_orden = DB::table('detalle_orden')->where('id', $id)->update([
-                'IdOrdenFK' => $validatedData['IdOrdenFK'],
-                'IdPrendaFK' => $validatedData['IdPrendaFK'],
+                'IdOrdenFk' => $validatedData['IdOrdenFk'],
+                'IdPrendaFk' => $validatedData['IdPrendaFk'],
                 'IdColorFK' => $validatedData['IdColorFK'],
                 'IdTallaFK' => $validatedData['IdTallaFK'],
                 'PrendaId' => $validatedData['PrendaId'],
                 'cantidad_producir' => $validatedData['cantidad_producir'],
                 'cantidad_producida' => $validatedData['cantidad_producida'],
-                'IdEstadoFK' => $validatedData['IdEstadoFK'],
+                'IdEstadoFk' => $validatedData['IdEstadoFk'],
             ]);
 
             return response()->json($detalle_orden);

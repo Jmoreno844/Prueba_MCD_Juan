@@ -48,7 +48,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-//'auth:api'
+//"auth:api"
 Route::group(['middleware' => ['json.response']], function () {
     Route::get("/check", [UserController::class, 'check'])->name("check");
 
@@ -64,7 +64,6 @@ Route::group(['middleware' => ['json.response']], function () {
     Route::apiResource("formaPago", FormaPagoController::class);
     Route::apiResource("genero", GeneroController::class);
     Route::apiResource("insumo", InsumoController::class);
-    Route::apiResource("insumoPrendas", InsumoPrendasController::class);
     Route::apiResource('insumoProveedor', InsumoProveedorController::class)->except(['update']);
     Route::apiResource("inventario", InventarioController::class);
     Route::apiResource("municipio", MunicipioController::class);
@@ -75,8 +74,19 @@ Route::group(['middleware' => ['json.response']], function () {
     Route::apiResource("talla", TallaController::class);
     Route::apiResource("tipoPersona", TipoPersonaController::class);
     Route::apiResource("tipoProteccion", TipoProteccionController::class);
-    Route::apiResource("venta", VentaController::class);
 
+    Route::apiResource("venta", VentaController::class);
+    Route::get('insumoPrendas', [InsumoPrendasController::class , "index"])->name('insumoPrendas.index');
+    Route::post('insumoPrendas/{idInsumoFK}/{idPrendaFK}', [InsumoPrendasController::class , "store"])->name('insumoPrendas.store');
+    Route::get('insumoPrendas/{idInsumoFK}/{idPrendaFK}', [InsumoPrendasController::class,'show'])->name('insumoPrendas.show');
+    Route::put('insumoPrendas/{idInsumoFK}/{idPrendaFK}', [InsumoPrendasController::class , "update"])->name('insumoPrendas.update');
+    Route::delete('insumoPrendas/{idInsumoFK}/{idPrendaFK}', [InsumoPrendasController::class,'destroy'])->name('insumoPrendas.destroy');
+
+    Route::get('insumoProveedor', [InsumoProveedorController::class , "index"])->name('insumoProveedor.index');
+    Route::post('insumoProveedor/{idInsumoFK}/{idProveedorFK}', [InsumoProveedorController::class , "store"])->name('insumoProveedor.store');
+    Route::get('insumoProveedor/{idInsumoFK}/{idProveedorFK}', [InsumoProveedorController::class,'show'])->name('insumoProveedor.show');
+    Route::put('insumoProveedor/{idInsumoFK}/{idProveedorFK}', [InsumoProveedorController::class , "update"])->name('insumoProveedor.update');
+    Route::delete('insumoProveedor/{idInsumoFK}/{idProveedorFK}', [InsumoProveedorController::class,'destroy'])->name('insumoProveedor.destroy');
 
     // ------------------- Consultas -------------------
 

@@ -16,20 +16,22 @@ class InsumoProveedorController extends Controller
         return response()->json($insumoProveedor);
     }
 
-    public function store(Request $request)
+    public function store($idInsumoFK, $idProveedorFK)
     {
         try {
-            $validatedData = $request->validate([
-                'IdInsumoFK' => 'required|integer|exists:insumo,id',
-                'IdProveedorFK' => 'required|integer|exists:proveedor,id',
-            ]);
+            $insumoExists = DB::table('insumo')->where('id', $idInsumoFK)->exists();
+            $proveedorExists = DB::table('proveedor')->where('id', $idProveedorFK)->exists();
+
+            if (!$insumoExists || !$proveedorExists) {
+                return response()->json(['message' => 'Invalid Insumo or Proveedor ID'], 422);
+            }
 
             $insumoProveedor = DB::table('insumo_proveedor')->insert([
-                'IdInsumoFK' => $validatedData['IdInsumoFK'],
-                'IdProveedorFK' => $validatedData['IdProveedorFK'],
+                'IdInsumoFK' => $idInsumoFK,
+                'IdProveedorFK' => $idProveedorFK,
             ]);
 
-            return response()->json($insumoProveedor);
+            return response()->json($insumoProveedor, 201);
         } catch (ValidationException $e) {
             return response()->json(['message' => $e->errors()], 422);
         } catch (\Exception $e) {
@@ -40,14 +42,22 @@ class InsumoProveedorController extends Controller
     public function show($idInsumoFK, $idProveedorFK)
     {
         $insumoProveedor = DB::table('insumo_proveedor')->where('IdInsumoFK', $idInsumoFK)->where('IdProveedorFK', $idProveedorFK)->first();
-        return response()->json($insumoProveedor);
+        if ($insumoProveedor) {
+            return response()->json($insumoProveedor);
+        } else {
+            return response()->json(['message' => 'Not found'], 404);
+        }
     }
 
     public function destroy($idInsumoFK, $idProveedorFK)
     {
         try {
-            DB::table('insumo_proveedor')->where('IdInsumoFK', $idInsumoFK)->where('IdProveedorFK', $idProveedorFK)->delete();
-            return response()->json(['message' => 'InsumoProveedor eliminado.']);
+            $deletedRows = DB::table('insumo_proveedor')->where('IdInsumoFK', $idInsumoFK)->where('IdProveedorFK', $idProveedorFK)->delete();
+            if ($deletedRows > 0) {
+                return response()->json(['message' => 'Deleted successfully']);
+            } else {
+                return response()->json(['message' => 'Not found'], 404);
+            }
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }

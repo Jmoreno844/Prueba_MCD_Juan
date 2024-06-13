@@ -20,14 +20,14 @@ class InsumoController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'Nombre' => 'required|max:50',
+                'nombre' => 'required|max:50',
                 'valor_unit' => 'required|numeric',
                 'stock_min' => 'required|numeric',
                 'stock_max' => 'required|numeric',
             ]);
 
             $insumo = DB::table('insumo')->insert([
-                'Nombre' => $validatedData['Nombre'],
+                'nombre' => $validatedData['nombre'],
                 'valor_unit' => $validatedData['valor_unit'],
                 'stock_min' => $validatedData['stock_min'],
                 'stock_max' => $validatedData['stock_max'],
@@ -51,14 +51,14 @@ class InsumoController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'Nombre' => 'required|max:50',
+                'nombre' => 'required|max:50',
                 'valor_unit' => 'required|numeric',
                 'stock_min' => 'required|numeric',
                 'stock_max' => 'required|numeric',
             ]);
 
             $insumo = DB::table('insumo')->where('id', $id)->update([
-                'Nombre' => $validatedData['Nombre'],
+                'nombre' => $validatedData['nombre'],
                 'valor_unit' => $validatedData['valor_unit'],
                 'stock_min' => $validatedData['stock_min'],
                 'stock_max' => $validatedData['stock_max'],

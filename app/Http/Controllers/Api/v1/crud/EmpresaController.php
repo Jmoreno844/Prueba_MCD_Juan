@@ -24,7 +24,7 @@ class EmpresaController extends Controller
                 'razon_social' => 'required',
                 'representante_legal' => 'required|max:50',
                 'FechaCreacion' => 'required|date',
-                'IdMunicipioFK' => 'required|integer',
+                'IdMunicipioFk' => 'required|integer',
             ]);
 
             $empresa = DB::table('empresa')->insert([
@@ -32,7 +32,7 @@ class EmpresaController extends Controller
                 'razon_social' => $validatedData['razon_social'],
                 'representante_legal' => $validatedData['representante_legal'],
                 'FechaCreacion' => $validatedData['FechaCreacion'],
-                'IdMunicipioFK' => $validatedData['IdMunicipioFK'],
+                'IdMunicipioFk' => $validatedData['IdMunicipioFk'],
             ]);
 
             return response()->json($empresa);
@@ -57,7 +57,7 @@ class EmpresaController extends Controller
                 'razon_social' => 'required',
                 'representante_legal' => 'required|max:50',
                 'FechaCreacion' => 'required|date',
-                'IdMunicipioFK' => 'required|integer',
+                'IdMunicipioFk' => 'required|integer',
             ]);
 
             $empresa = DB::table('empresa')->where('id', $id)->update([
@@ -65,7 +65,7 @@ class EmpresaController extends Controller
                 'razon_social' => $validatedData['razon_social'],
                 'representante_legal' => $validatedData['representante_legal'],
                 'FechaCreacion' => $validatedData['FechaCreacion'],
-                'IdMunicipioFK' => $validatedData['IdMunicipioFK'],
+                'IdMunicipioFk' => $validatedData['IdMunicipioFk'],
             ]);
 
             return response()->json($empresa);

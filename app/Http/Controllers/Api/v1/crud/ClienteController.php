@@ -11,7 +11,7 @@ class ClienteController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->get('per_page', 15); // Default to 15 items per page if not set
-        $clientes = DB::table('clientes')->paginate($perPage);
+        $clientes = DB::table('cliente')->paginate($perPage);
         return response()->json($clientes);
     }
 
@@ -26,7 +26,7 @@ class ClienteController extends Controller
                 'IdMunicipioFK' => 'required|integer',
             ]);
 
-            $cliente = DB::table('clientes')->insert([
+            $cliente = DB::table('cliente')->insert([
                 'nombre' => $validatedData['nombre'],
                 'IdCliente' => $validatedData['IdCliente'],
                 'IdTipoPersonaFK' => $validatedData['IdTipoPersonaFK'],
@@ -44,7 +44,7 @@ class ClienteController extends Controller
 
     public function show($id)
     {
-        $cliente = DB::table('clientes')->where('id', $id)->first();
+        $cliente = DB::table('cliente')->where('id', $id)->first();
         return response()->json($cliente);
     }
 
@@ -59,7 +59,7 @@ class ClienteController extends Controller
                 'IdMunicipioFK' => 'required|integer',
             ]);
 
-            $cliente = DB::table('clientes')->where('id', $id)->update([
+            $cliente = DB::table('cliente')->where('id', $id)->update([
                 'nombre' => $validatedData['nombre'],
                 'IdCliente' => $validatedData['IdCliente'],
                 'IdTipoPersonaFK' => $validatedData['IdTipoPersonaFK'],
@@ -78,7 +78,7 @@ class ClienteController extends Controller
     public function destroy($id)
     {
         try {
-            DB::table('clientes')->where('id', $id)->delete();
+            DB::table('cliente')->where('id', $id)->delete();
             return response()->json(['message' => 'Cliente eliminado.']);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
