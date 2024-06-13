@@ -19,7 +19,7 @@ class OrdenSeeder extends Seeder
             ['fecha' => '2024-02-10', 'IdEmpleadoFK' => 2, 'IdClienteFk' => 2, 'IdEstadoFK' => 2],
             ['fecha' => '2024-03-05', 'IdEmpleadoFK' => 3, 'IdClienteFk' => 3, 'IdEstadoFK' => 3],
             ['fecha' => '2024-04-20', 'IdEmpleadoFK' => 1, 'IdClienteFk' => 4, 'IdEstadoFK' => 4],
-            ['fecha' => '2024-05-30', 'IdEmpleadoFK' => 2, 'IdClienteFk' => 5, 'IdEstadoFK' => 5]
+            ['fecha' => '2024-05-30', 'IdEmpleadoFK' => 2, 'IdClienteFk' => 5, 'IdEstadoFK' => 6]
         ]);
     }
 }

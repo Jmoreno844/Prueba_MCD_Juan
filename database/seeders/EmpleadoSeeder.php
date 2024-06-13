@@ -15,7 +15,7 @@ class EmpleadoSeeder extends Seeder
     public function run()
     {
         DB::table("empleado")->insert([
-            ['nombre' => 'Laura Martínez', 'IdCargoFk' => 1, 'fecha_ingreso' => '2024-01-15', 'IdMunicipioFk' => 1],
+            ['nombre' => 'Laura Martínez', 'IdCargoFk' => 1, 'fecha_ingreso' => '2022-01-15', 'IdMunicipioFk' => 1],
             ['nombre' => 'Ricardo Ramírez', 'IdCargoFk' => 2, 'fecha_ingreso' => '2024-02-10', 'IdMunicipioFk' => 2],
             ['nombre' => 'Julieta Fernández', 'IdCargoFk' => 3, 'fecha_ingreso' => '2024-03-05', 'IdMunicipioFk' => 3],
             ['nombre' => 'Federico Torres', 'IdCargoFk' => 1, 'fecha_ingreso' => '2024-04-20', 'IdMunicipioFk' => 4],

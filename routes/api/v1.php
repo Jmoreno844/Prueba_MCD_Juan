@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\v1\ConsultasController;
 use App\Http\Controllers\Api\v1\crud\CargoController;
 use App\Http\Controllers\Api\v1\crud\ClienteController;
 use App\Http\Controllers\Api\v1\crud\ColorController;
@@ -74,18 +75,37 @@ Route::group(['middleware' => ['json.response', 'auth:api']], function () {
     Route::apiResource("tipoPersona", TipoPersonaController::class);
     Route::apiResource("tipoProteccion", TipoProteccionController::class);
     Route::apiResource("venta", VentaController::class);
+
+
+    // ------------------- Consultas -------------------
+
+    Route::get("clientesEnCompraFechaEspecifica/{fecha}", [ConsultasController::class, 'clientesEnCompraFechaEspecifica'])->name("clientesEnCompraFechaEspecifica");
+    Route::get('/ventas-julio-2023', [ConsultasController::class, 'ventasJulio2023']);
+    Route::get('/empleados-con-cargos-y-municipios', [ConsultasController::class, 'empleadosConCargosYMunicipios']);
+    Route::get('/ventas-con-clientes-y-forma-pago', [ConsultasController::class, 'ventasConClientesYFormaPago']);
+    Route::get('/ordenes-con-detalles', [ConsultasController::class, 'ordenesConDetalles']);
+    Route::get('/inventario-con-detalles', [ConsultasController::class, 'inventarioConDetalles']);
+    Route::get('/proovedores-con-insumos', [ConsultasController::class, 'proovedoresConInsumos']);
+    Route::get('/cantidad-ventas-por-empleado', [ConsultasController::class, 'cantidadVentasPorEmpleado']);
+    Route::get('/ordenes-en-proceso', [ConsultasController::class, 'ordenesEnProceso']);
+    Route::get('/empresa-y-municipio', [ConsultasController::class, 'empresaYMunicipio']);
+    Route::get('/empleados-duracion-empleo', [ConsultasController::class, 'empleadosDuracionEmpleo']);
+    Route::get('/valor-total-ventas-por-prenda-usd', [ConsultasController::class, 'ValorTotalVentasPorPrendaUsd']);
+    Route::get('/cantidades-max-y-min-fabricacion-de-insumo-por-prendas', [ConsultasController::class, 'cantidadesMaxYMinFabricacionDeInsumoPorPrendas']);
+    Route::get('/stock-prendas', [ConsultasController::class, 'stockPrendas']);
+    Route::get('/ventas-rango-fechas/{fecha_inicio}/{fecha_fin}', [ConsultasController::class, 'ventasRangoFechas']);
+    Route::get('/prendas-con-estado', [ConsultasController::class, 'prendasConEstado']);
+    Route::get('/empleados-por-fecha-ingreso', [ConsultasController::class, 'empleadosPorFechaIngreso']);
+    Route::get('/tipo-proteccion-con-su-cantidad-prendas', [ConsultasController::class, 'tipoProteccionConSuCantidadPrendas']);
+    Route::get('/estado-con-cantidad-prendas', [ConsultasController::class, 'estadoConCantidadPrendas']);
+    Route::get('/prenda-junto-valor-total-ventas-cop', [ConsultasController::class, 'prendaJuntoValorTotalVentasCop']);
+    Route::get('/total-gastado-por-cliente', [ConsultasController::class, 'totalGastadoPorCliente']);
 });
 
 
-
-//Rutas protegias por sesion
-Route::group(['middleware' => ['json.response', "auth"]], function () {
-
-});
 
 Route::group(['middleware' => ['json.response']], function () {
     Route::post("/gen_jwt", [UserController::class, 'generateJWT'])->name("gen_jwt");
     Route::post("/register", [UserController::class, 'register'])->name("register");
     Route::post("/login", [UserController::class, 'login'])->name("login");
-
 });

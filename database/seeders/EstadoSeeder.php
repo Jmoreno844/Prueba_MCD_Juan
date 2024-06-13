@@ -19,7 +19,9 @@ class EstadoSeeder extends Seeder
             ['descripcion' => 'En revisión'],
             ['descripcion' => 'Aprobado'],
             ['descripcion' => 'Rechazado'],
-            ['descripcion' => 'Completado']
+            ['descripcion' => 'Completado'],
+            ['descripcion' => 'En proceso']
+
         ]);
     }
 }
