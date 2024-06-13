@@ -48,7 +48,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-
+//'auth:api'
 Route::group(['middleware' => ['json.response']], function () {
     Route::get("/check", [UserController::class, 'check'])->name("check");
 

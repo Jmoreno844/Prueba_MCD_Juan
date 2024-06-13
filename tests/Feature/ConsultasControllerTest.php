@@ -14,6 +14,8 @@ class ConsultasControllerTest extends TestCase
         $response = $this->getJson(route('clientesEnCompraFechaEspecifica', ['fecha' => '2023-07-01']));
         $response->assertStatus(200);
         $response->assertJsonStructure(['data', 'links']);
+        $this->assertNotEmpty($response->json('data'));
+
     }
 
     /** @test */
@@ -22,6 +24,8 @@ class ConsultasControllerTest extends TestCase
         $response = $this->getJson('/api/ventas-julio-2023');
         $response->assertStatus(200);
         $response->assertJsonStructure(['data', 'links']);
+                $this->assertNotEmpty($response->json('data'));
+
     }
 
     /** @test */
@@ -30,6 +34,8 @@ class ConsultasControllerTest extends TestCase
         $response = $this->getJson('/api/empleados-con-cargos-y-municipios');
         $response->assertStatus(200);
         $response->assertJsonStructure(['data', 'links']);
+                $this->assertNotEmpty($response->json('data'));
+
     }
 
     /** @test */
@@ -38,6 +44,8 @@ class ConsultasControllerTest extends TestCase
         $response = $this->getJson('/api/ventas-con-clientes-y-forma-pago');
         $response->assertStatus(200);
         $response->assertJsonStructure(['data', 'links']);
+                $this->assertNotEmpty($response->json('data'));
+
     }
 
     /** @test */
@@ -46,12 +54,16 @@ class ConsultasControllerTest extends TestCase
         $response = $this->getJson('/api/ordenes-con-detalles');
         $response->assertStatus(200);
         $response->assertJsonStructure(['data', 'links']);
+                $this->assertNotEmpty($response->json('data'));
+
     }
 
     /** @test */
     public function it_can_fetch_inventario_con_detalles()
     {
         $response = $this->getJson('/api/inventario-con-detalles');
+                $this->assertNotEmpty($response->json('data'));
+
         $response->assertStatus(200);
         $response->assertJsonStructure(['data', 'links']);
     }
@@ -62,6 +74,8 @@ class ConsultasControllerTest extends TestCase
         $response = $this->getJson('/api/proovedores-con-insumos');
         $response->assertStatus(200);
         $response->assertJsonStructure(['data', 'links']);
+                $this->assertNotEmpty($response->json('data'));
+
     }
 
     /** @test */
@@ -70,6 +84,8 @@ class ConsultasControllerTest extends TestCase
         $response = $this->getJson('/api/cantidad-ventas-por-empleado');
         $response->assertStatus(200);
         $response->assertJsonStructure(['data', 'links']);
+                $this->assertNotEmpty($response->json('data'));
+
     }
 
     /** @test */
@@ -78,6 +94,8 @@ class ConsultasControllerTest extends TestCase
         $response = $this->getJson('/api/ordenes-en-proceso');
         $response->assertStatus(200);
         $response->assertJsonStructure(['data', 'links']);
+                $this->assertNotEmpty($response->json('data'));
+
     }
 
     /** @test */
@@ -86,6 +104,8 @@ class ConsultasControllerTest extends TestCase
         $response = $this->getJson('/api/empresa-y-municipio');
         $response->assertStatus(200);
         $response->assertJsonStructure(['data', 'links']);
+                $this->assertNotEmpty($response->json('data'));
+
     }
 
     /** @test */
@@ -94,6 +114,8 @@ class ConsultasControllerTest extends TestCase
         $response = $this->getJson('/api/empleados-duracion-empleo');
         $response->assertStatus(200);
         $response->assertJsonStructure(['data', 'links']);
+                $this->assertNotEmpty($response->json('data'));
+
     }
 
     /** @test */
@@ -102,6 +124,8 @@ class ConsultasControllerTest extends TestCase
         $response = $this->getJson('/api/valor-total-ventas-por-prenda-usd');
         $response->assertStatus(200);
         $response->assertJsonStructure(['data', 'links']);
+                $this->assertNotEmpty($response->json('data'));
+
     }
 
     /** @test */
@@ -110,6 +134,8 @@ class ConsultasControllerTest extends TestCase
         $response = $this->getJson('/api/cantidades-max-y-min-fabricacion-de-insumo-por-prendas');
         $response->assertStatus(200);
         $response->assertJsonStructure(['data', 'links']);
+                $this->assertNotEmpty($response->json('data'));
+
     }
 
     /** @test */
@@ -118,6 +144,8 @@ class ConsultasControllerTest extends TestCase
         $response = $this->getJson('/api/stock-prendas');
         $response->assertStatus(200);
         $response->assertJsonStructure(['data', 'links']);
+                $this->assertNotEmpty($response->json('data'));
+
     }
 
     /** @test */
@@ -126,6 +154,8 @@ class ConsultasControllerTest extends TestCase
         $response = $this->getJson('/api/ventas-rango-fechas/2023-01-01/2023-12-31');
         $response->assertStatus(200);
         $response->assertJsonStructure(['data', 'links']);
+                $this->assertNotEmpty($response->json('data'));
+
     }
 
     /** @test */
@@ -134,6 +164,8 @@ class ConsultasControllerTest extends TestCase
         $response = $this->getJson('/api/prendas-con-estado');
         $response->assertStatus(200);
         $response->assertJsonStructure(['data', 'links']);
+                $this->assertNotEmpty($response->json('data'));
+
     }
 
     /** @test */
@@ -142,6 +174,8 @@ class ConsultasControllerTest extends TestCase
         $response = $this->getJson('/api/empleados-por-fecha-ingreso');
         $response->assertStatus(200);
         $response->assertJsonStructure(['data', 'links']);
+                $this->assertNotEmpty($response->json('data'));
+
     }
 
     /** @test */
@@ -150,6 +184,8 @@ class ConsultasControllerTest extends TestCase
         $response = $this->getJson('/api/tipo-proteccion-con-su-cantidad-prendas');
         $response->assertStatus(200);
         $response->assertJsonStructure(['data', 'links']);
+                $this->assertNotEmpty($response->json('data'));
+
     }
 
     /** @test */
@@ -158,6 +194,8 @@ class ConsultasControllerTest extends TestCase
         $response = $this->getJson('/api/estado-con-cantidad-prendas');
         $response->assertStatus(200);
         $response->assertJsonStructure(['data', 'links']);
+                $this->assertNotEmpty($response->json('data'));
+
     }
 
     /** @test */
@@ -166,6 +204,8 @@ class ConsultasControllerTest extends TestCase
         $response = $this->getJson('/api/prenda-junto-valor-total-ventas-cop');
         $response->assertStatus(200);
         $response->assertJsonStructure(['data', 'links']);
+                $this->assertNotEmpty($response->json('data'));
+
     }
 
     /** @test */
@@ -174,5 +214,7 @@ class ConsultasControllerTest extends TestCase
         $response = $this->getJson('/api/total-gastado-por-cliente');
         $response->assertStatus(200);
         $response->assertJsonStructure(['data', 'links']);
+                $this->assertNotEmpty($response->json('data'));
+
     }
 }
