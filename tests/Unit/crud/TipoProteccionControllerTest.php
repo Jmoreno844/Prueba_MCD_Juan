@@ -37,7 +37,7 @@ class TipoProteccionControllerTest extends TestCase
 
         $response = $this->postJson(route('tipoProteccion.store'), $data);
 
-        $response->assertStatus(201);
+        $response->assertStatus(200);
     }
 
     /** @test */

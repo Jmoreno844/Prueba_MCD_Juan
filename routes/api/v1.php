@@ -64,7 +64,6 @@ Route::group(['middleware' => ['json.response']], function () {
     Route::apiResource("formaPago", FormaPagoController::class);
     Route::apiResource("genero", GeneroController::class);
     Route::apiResource("insumo", InsumoController::class);
-    Route::apiResource('insumoProveedor', InsumoProveedorController::class)->except(['update']);
     Route::apiResource("inventario", InventarioController::class);
     Route::apiResource("municipio", MunicipioController::class);
     Route::apiResource("orden", OrdenController::class);
@@ -85,7 +84,6 @@ Route::group(['middleware' => ['json.response']], function () {
     Route::get('insumoProveedor', [InsumoProveedorController::class , "index"])->name('insumoProveedor.index');
     Route::post('insumoProveedor/{idInsumoFK}/{idProveedorFK}', [InsumoProveedorController::class , "store"])->name('insumoProveedor.store');
     Route::get('insumoProveedor/{idInsumoFK}/{idProveedorFK}', [InsumoProveedorController::class,'show'])->name('insumoProveedor.show');
-    Route::put('insumoProveedor/{idInsumoFK}/{idProveedorFK}', [InsumoProveedorController::class , "update"])->name('insumoProveedor.update');
     Route::delete('insumoProveedor/{idInsumoFK}/{idProveedorFK}', [InsumoProveedorController::class,'destroy'])->name('insumoProveedor.destroy');
 
     // ------------------- Consultas -------------------

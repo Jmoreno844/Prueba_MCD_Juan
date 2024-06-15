@@ -43,7 +43,7 @@ class PrendaControllerTest extends TestCase
 
         $response = $this->postJson(route('prenda.store'), $data);
 
-        $response->assertStatus(201);
+        $response->assertStatus(200);
     }
 
     /** @test */

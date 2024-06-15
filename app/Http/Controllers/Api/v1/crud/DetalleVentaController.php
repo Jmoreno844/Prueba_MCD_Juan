@@ -1,38 +1,47 @@
 <?php
-
 namespace App\Http\Controllers\Api\v1\crud;
+
+use App\DTOs\DetalleVentaDTO;
 use App\Http\Controllers\Api\v1\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use App\Services\DetalleVentaService;
 
 class DetalleVentaController extends Controller
 {
+    protected $detalleVentaService;
+    protected $fields = ['IdVentaFk', 'IdInventarioFK', 'cantidad'];
+
+    public function __construct(DetalleVentaService $detalleVentaService)
+    {
+        $this->detalleVentaService = $detalleVentaService;
+    }
+
     public function index(Request $request)
     {
-        $perPage = $request->get('per_page', 15); // Default to 15 items per page if not set
-        $detalle_ventas = DB::table('detalle_venta')->paginate($perPage);
-        return response()->json($detalle_ventas);
+        $perPage = $request->get('per_page', 15);
+        $items = $this->detalleVentaService->index($perPage);
+        return response()->json($items);
     }
 
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'IdVentaFk' => 'required|integer',
+                    'IdInventarioFK' => 'required|integer',
+                    'cantidad' => 'required|integer'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()], 422);
+        }
+
         try {
-            $validatedData = $request->validate([
-                'IdVentaFk' => 'required|integer',
-                'IdInventarioFK' => 'required|integer',
-                'cantidad' => 'required|integer',
-            ]);
+            $dto = new DetalleVentaDTO($request, $this->fields);
+            $this->detalleVentaService->store($dto);
 
-            $detalle_venta = DB::table('detalle_venta')->insert([
-                'IdVentaFk' => $validatedData['IdVentaFk'],
-                'IdInventarioFK' => $validatedData['IdInventarioFK'],
-                'cantidad' => $validatedData['cantidad'],
-            ]);
-
-            return response()->json($detalle_venta);
-        } catch (ValidationException $e) {
-            return response()->json(['message' => $e->errors()], 422);
+            return response()->json(['message' => 'DetalleVenta creado correctamente.']);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
@@ -40,28 +49,27 @@ class DetalleVentaController extends Controller
 
     public function show($id)
     {
-        $detalle_venta = DB::table('detalle_venta')->where('id', $id)->first();
-        return response()->json($detalle_venta);
+        $item = $this->detalleVentaService->show($id);
+        return response()->json($item);
     }
 
     public function update(Request $request, $id)
     {
+        $validator = Validator::make($request->all(), [
+            'IdVentaFk' => 'required|integer',
+                    'IdInventarioFK' => 'required|integer',
+                    'cantidad' => 'required|integer'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()], 422);
+        }
+
         try {
-            $validatedData = $request->validate([
-                'IdVentaFk' => 'required|integer',
-                'IdInventarioFK' => 'required|integer',
-                'cantidad' => 'required|integer',
-            ]);
+            $dto = new DetalleVentaDTO($request, $this->fields);
+            $this->detalleVentaService->update($id, $dto);
 
-            $detalle_venta = DB::table('detalle_venta')->where('id', $id)->update([
-                'IdVentaFk' => $validatedData['IdVentaFk'],
-                'IdInventarioFK' => $validatedData['IdInventarioFK'],
-                'cantidad' => $validatedData['cantidad'],
-            ]);
-
-            return response()->json($detalle_venta);
-        } catch (ValidationException $e) {
-            return response()->json(['message' => $e->errors()], 422);
+            return response()->json(['message' => 'DetalleVenta actualizado correctamente.']);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
@@ -70,8 +78,9 @@ class DetalleVentaController extends Controller
     public function destroy($id)
     {
         try {
-            DB::table('detalle_venta')->where('id', $id)->delete();
-            return response()->json(['message' => 'Detalle_Venta eliminada.']);
+            $this->detalleVentaService->destroy($id);
+
+            return response()->json(['message' => 'DetalleVenta eliminado.']);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }

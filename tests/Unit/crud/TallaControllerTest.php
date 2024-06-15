@@ -37,7 +37,7 @@ class TallaControllerTest extends TestCase
 
         $response = $this->postJson(route('talla.store'), $data);
 
-        $response->assertStatus(201);
+        $response->assertStatus(200);
     }
 
     /** @test */

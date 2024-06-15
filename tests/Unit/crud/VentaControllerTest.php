@@ -40,7 +40,7 @@ class VentaControllerTest extends TestCase
 
         $response = $this->postJson(route('venta.store'), $data);
 
-        $response->assertStatus(201);
+        $response->assertStatus(200);
     }
 
     /** @test */

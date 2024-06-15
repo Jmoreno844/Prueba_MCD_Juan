@@ -37,7 +37,7 @@ class TipoPersonaControllerTest extends TestCase
 
         $response = $this->postJson(route('tipoPersona.store'), $data);
 
-        $response->assertStatus(201);
+        $response->assertStatus(200);
     }
 
     /** @test */

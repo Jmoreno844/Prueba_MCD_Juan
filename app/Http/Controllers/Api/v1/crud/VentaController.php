@@ -1,36 +1,48 @@
 <?php
-
 namespace App\Http\Controllers\Api\v1\crud;
 
+use App\DTOs\VentaDTO;
 use App\Http\Controllers\Api\v1\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use App\Services\VentaService;
 
 class VentaController extends Controller
 {
+    protected $ventaService;
+    protected $fields = ['Fecha',"IdEmpleadoFK", 'IdClienteFK', 'IdFormaPagoFK'];
+
+    public function __construct(VentaService $ventaService)
+    {
+        $this->ventaService = $ventaService;
+    }
+
     public function index(Request $request)
     {
-        $perPage = $request->get('per_page', 15); // Default to 15 items per page if not set
-        $venta = DB::table('venta')->paginate($perPage);
-        return response()->json($venta);
+        $perPage = $request->get('per_page', 15);
+        $items = $this->ventaService->index($perPage);
+        return response()->json($items);
     }
 
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+                    'Fecha' => 'required|date',
+                    'IdClienteFK' => 'required|integer|exists:cliente,id',
+                    'IdFormaPagoFK' => 'required|integer|exists:forma_pago,id',
+                    'IdEmpleadoFK' => 'required|integer|exists:empleado,id'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()], 422);
+        }
+
         try {
-            $validatedData = $request->validate([
-                'Fecha' => 'required|date',
-                'IdEmpleadoFK' => 'required|integer|exists:empleado,id',
-                'IdClienteFK' => 'required|integer|exists:cliente,id',
-                'IdFormaPagoFK' => 'required|integer|exists:forma_pago,id',
-            ]);
+            $dto = new VentaDTO($request, $this->fields);
+            $this->ventaService->store($dto);
 
-            $venta = DB::table('venta')->insertGetId($validatedData);
-
-            return response()->json(['id' => $venta], 201);
-        } catch (ValidationException $e) {
-            return response()->json(['message' => $e->errors()], 422);
+            return response()->json(['message' => 'Venta creado correctamente.']);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
@@ -38,25 +50,29 @@ class VentaController extends Controller
 
     public function show($id)
     {
-        $venta = DB::table('venta')->where('id', $id)->first();
-        return response()->json($venta);
+        $item = $this->ventaService->show($id);
+        return response()->json($item);
     }
 
     public function update(Request $request, $id)
     {
+        $validator = Validator::make($request->all(), [
+            'Fecha' => 'required|date',
+            'IdClienteFK' => 'required|integer|exists:cliente,id',
+            'IdFormaPagoFK' => 'required|integer|exists:forma_pago,id',
+            'IdEmpleadoFK' => 'required|integer|exists:empleado,id'
+]);
+
+
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()], 422);
+        }
+
         try {
-            $validatedData = $request->validate([
-                'Fecha' => 'required|date',
-                'IdEmpleadoFK' => 'required|integer|exists:empleado,id',
-                'IdClienteFK' => 'required|integer|exists:cliente,id',
-                'IdFormaPagoFK' => 'required|integer|exists:forma_pago,id',
-            ]);
+            $dto = new VentaDTO($request, $this->fields);
+            $this->ventaService->update($id, $dto);
 
-            DB::table('venta')->where('id', $id)->update($validatedData);
-
-            return response()->json(['message' => 'Venta actualizada.']);
-        } catch (ValidationException $e) {
-            return response()->json(['message' => $e->errors()], 422);
+            return response()->json(['message' => 'Venta actualizado correctamente.']);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
@@ -65,8 +81,9 @@ class VentaController extends Controller
     public function destroy($id)
     {
         try {
-            DB::table('venta')->where('id', $id)->delete();
-            return response()->json(['message' => 'Venta eliminada.']);
+            $this->ventaService->destroy($id);
+
+            return response()->json(['message' => 'Venta eliminado.']);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }

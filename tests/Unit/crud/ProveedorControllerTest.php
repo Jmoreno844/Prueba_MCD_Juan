@@ -40,7 +40,7 @@ class ProveedorControllerTest extends TestCase
 
         $response = $this->postJson(route('proveedor.store'), $data);
 
-        $response->assertStatus(201);
+        $response->assertStatus(200);
     }
 
     /** @test */

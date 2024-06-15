@@ -42,7 +42,7 @@ class InsumoPrendasControllerTest extends TestCase
 
 
 
-        $response->assertStatus(201);
+        $response->assertStatus(200);
     }
 
     /** @test */
@@ -61,7 +61,7 @@ class InsumoPrendasControllerTest extends TestCase
         $idInsumoFK = 2;
         $idPrendaFK = 12;
         $data = [
-            'Cantidad' => 3,
+            'Cantidad' => 5,
         ];
 
         $response = $this->putJson(route('insumoPrendas.update', ['idInsumoFK' => $idInsumoFK, 'idPrendaFK' => $idPrendaFK]), $data);

@@ -1,48 +1,52 @@
 <?php
-
 namespace App\Http\Controllers\Api\v1\crud;
+
+use App\DTOs\DetalleOrdenDTO;
 use App\Http\Controllers\Api\v1\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use App\Services\DetalleOrdenService;
 
 class DetalleOrdenController extends Controller
 {
+    protected $detalleOrdenService;
+    protected $fields = ['IdOrdenFk', 'IdPrendaFk', 'IdColorFK', 'IdTallaFK', 'PrendaId', 'cantidad_producir', 'cantidad_producida', 'IdEstadoFk'];
+
+    public function __construct(DetalleOrdenService $detalleOrdenService)
+    {
+        $this->detalleOrdenService = $detalleOrdenService;
+    }
+
     public function index(Request $request)
     {
-        $perPage = $request->get('per_page', 15); // Default to 15 items per page if not set
-        $detalle_ordenes = DB::table('detalle_orden')->paginate($perPage);
-        return response()->json($detalle_ordenes);
+        $perPage = $request->get('per_page', 15);
+        $items = $this->detalleOrdenService->index($perPage);
+        return response()->json($items);
     }
 
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'IdOrdenFk' => 'required|integer',
+                    'IdPrendaFk' => 'required|integer',
+                    'IdColorFK' => 'required|integer',
+                    'IdTallaFK' => 'required|integer',
+                    'PrendaId' => 'required|integer',
+                    'cantidad_producir' => 'required|integer',
+                    'cantidad_producida' => 'required|integer',
+                    'IdEstadoFk' => 'required|integer'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()], 422);
+        }
+
         try {
-            $validatedData = $request->validate([
-                'IdOrdenFk' => 'required|integer',
-                'IdPrendaFk' => 'required|integer',
-                'IdColorFK' => 'required|integer',
-                'IdTallaFK' => 'required|integer',
-                'PrendaId' => 'required|integer',
-                'cantidad_producir' => 'required|integer',
-                'cantidad_producida' => 'required|integer',
-                'IdEstadoFk' => 'required|integer',
-            ]);
+            $dto = new DetalleOrdenDTO($request, $this->fields);
+            $this->detalleOrdenService->store($dto);
 
-            $detalle_orden = DB::table('detalle_orden')->insert([
-                'IdOrdenFk' => $validatedData['IdOrdenFk'],
-                'IdPrendaFk' => $validatedData['IdPrendaFk'],
-                'IdColorFK' => $validatedData['IdColorFK'],
-                'IdTallaFK' => $validatedData['IdTallaFK'],
-                'PrendaId' => $validatedData['PrendaId'],
-                'cantidad_producir' => $validatedData['cantidad_producir'],
-                'cantidad_producida' => $validatedData['cantidad_producida'],
-                'IdEstadoFk' => $validatedData['IdEstadoFk'],
-            ]);
-
-            return response()->json($detalle_orden);
-        } catch (ValidationException $e) {
-            return response()->json(['message' => $e->errors()], 422);
+            return response()->json(['message' => 'DetalleOrden creado correctamente.']);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
@@ -50,38 +54,32 @@ class DetalleOrdenController extends Controller
 
     public function show($id)
     {
-        $detalle_orden = DB::table('detalle_orden')->where('id', $id)->first();
-        return response()->json($detalle_orden);
+        $item = $this->detalleOrdenService->show($id);
+        return response()->json($item);
     }
 
     public function update(Request $request, $id)
     {
+        $validator = Validator::make($request->all(), [
+            'IdOrdenFk' => 'required|integer',
+                    'IdPrendaFk' => 'required|integer',
+                    'IdColorFK' => 'required|integer',
+                    'IdTallaFK' => 'required|integer',
+                    'PrendaId' => 'required|integer',
+                    'cantidad_producir' => 'required|integer',
+                    'cantidad_producida' => 'required|integer',
+                    'IdEstadoFk' => 'required|integer'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()], 422);
+        }
+
         try {
-            $validatedData = $request->validate([
-                'IdOrdenFk' => 'required|integer',
-                'IdPrendaFk' => 'required|integer',
-                'IdColorFK' => 'required|integer',
-                'IdTallaFK' => 'required|integer',
-                'PrendaId' => 'required|integer',
-                'cantidad_producir' => 'required|integer',
-                'cantidad_producida' => 'required|integer',
-                'IdEstadoFk' => 'required|integer',
-            ]);
+            $dto = new DetalleOrdenDTO($request, $this->fields);
+            $this->detalleOrdenService->update($id, $dto);
 
-            $detalle_orden = DB::table('detalle_orden')->where('id', $id)->update([
-                'IdOrdenFk' => $validatedData['IdOrdenFk'],
-                'IdPrendaFk' => $validatedData['IdPrendaFk'],
-                'IdColorFK' => $validatedData['IdColorFK'],
-                'IdTallaFK' => $validatedData['IdTallaFK'],
-                'PrendaId' => $validatedData['PrendaId'],
-                'cantidad_producir' => $validatedData['cantidad_producir'],
-                'cantidad_producida' => $validatedData['cantidad_producida'],
-                'IdEstadoFk' => $validatedData['IdEstadoFk'],
-            ]);
-
-            return response()->json($detalle_orden);
-        } catch (ValidationException $e) {
-            return response()->json(['message' => $e->errors()], 422);
+            return response()->json(['message' => 'DetalleOrden actualizado correctamente.']);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
@@ -90,8 +88,9 @@ class DetalleOrdenController extends Controller
     public function destroy($id)
     {
         try {
-            DB::table('detalle_orden')->where('id', $id)->delete();
-            return response()->json(['message' => 'Detalle_Orden eliminada.']);
+            $this->detalleOrdenService->destroy($id);
+
+            return response()->json(['message' => 'DetalleOrden eliminado.']);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }

@@ -1,42 +1,49 @@
 <?php
-
 namespace App\Http\Controllers\Api\v1\crud;
+
+use App\DTOs\ClienteDTO;
 use App\Http\Controllers\Api\v1\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use App\Services\ClienteService;
 
 class ClienteController extends Controller
 {
+    protected $clienteService;
+    protected $fields = ['nombre', 'IdCliente', 'IdTipoPersonaFK', 'fechaRegistro', 'IdMunicipioFK'];
+
+    public function __construct(ClienteService $clienteService)
+    {
+        $this->clienteService = $clienteService;
+    }
+
     public function index(Request $request)
     {
-        $perPage = $request->get('per_page', 15); // Default to 15 items per page if not set
-        $clientes = DB::table('cliente')->paginate($perPage);
+        $perPage = $request->get('per_page', 15);
+        $clientes = $this->clienteService->index($perPage);
         return response()->json($clientes);
     }
 
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'nombre' => 'required|max:50',
+            'IdCliente' => 'required|max:50',
+            'IdTipoPersonaFK' => 'required|integer',
+            'fechaRegistro' => 'required|date',
+            'IdMunicipioFK' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()], 422);
+        }
+
         try {
-            $validatedData = $request->validate([
-                'nombre' => 'required|max:50',
-                'IdCliente' => 'required|max:50',
-                'IdTipoPersonaFK' => 'required|integer',
-                'fechaRegistro' => 'required|date',
-                'IdMunicipioFK' => 'required|integer',
-            ]);
+            $clienteDTO = new ClienteDTO($request, $this->fields);
+            $this->clienteService->store($clienteDTO);
 
-            $cliente = DB::table('cliente')->insert([
-                'nombre' => $validatedData['nombre'],
-                'IdCliente' => $validatedData['IdCliente'],
-                'IdTipoPersonaFK' => $validatedData['IdTipoPersonaFK'],
-                'fechaRegistro' => $validatedData['fechaRegistro'],
-                'IdMunicipioFK' => $validatedData['IdMunicipioFK'],
-            ]);
-
-            return response()->json($cliente);
-        } catch (ValidationException $e) {
-            return response()->json(['message' => $e->errors()], 422);
+            return response()->json(['message' => 'Cliente creado correctamente.']);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
@@ -44,32 +51,29 @@ class ClienteController extends Controller
 
     public function show($id)
     {
-        $cliente = DB::table('cliente')->where('id', $id)->first();
+        $cliente = $this->clienteService->show($id);
         return response()->json($cliente);
     }
 
     public function update(Request $request, $id)
     {
+        $validator = Validator::make($request->all(), [
+            'nombre' => 'required|max:50',
+            'IdCliente' => 'required|max:50',
+            'IdTipoPersonaFK' => 'required|integer',
+            'fechaRegistro' => 'required|date',
+            'IdMunicipioFK' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()], 422);
+        }
+
         try {
-            $validatedData = $request->validate([
-                'nombre' => 'required|max:50',
-                'IdCliente' => 'required|max:50',
-                'IdTipoPersonaFK' => 'required|integer',
-                'fechaRegistro' => 'required|date',
-                'IdMunicipioFK' => 'required|integer',
-            ]);
+            $clienteDTO = new ClienteDTO($request, $this->fields);
+            $this->clienteService->update($id, $clienteDTO);
 
-            $cliente = DB::table('cliente')->where('id', $id)->update([
-                'nombre' => $validatedData['nombre'],
-                'IdCliente' => $validatedData['IdCliente'],
-                'IdTipoPersonaFK' => $validatedData['IdTipoPersonaFK'],
-                'fechaRegistro' => $validatedData['fechaRegistro'],
-                'IdMunicipioFK' => $validatedData['IdMunicipioFK'],
-            ]);
-
-            return response()->json($cliente);
-        } catch (ValidationException $e) {
-            return response()->json(['message' => $e->errors()], 422);
+            return response()->json(['message' => 'Cliente actualizado correctamente.']);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
@@ -78,7 +82,8 @@ class ClienteController extends Controller
     public function destroy($id)
     {
         try {
-            DB::table('cliente')->where('id', $id)->delete();
+            $this->clienteService->destroy($id);
+
             return response()->json(['message' => 'Cliente eliminado.']);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);

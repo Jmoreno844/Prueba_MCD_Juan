@@ -1,46 +1,54 @@
 <?php
-
 namespace App\Http\Controllers\Api\v1\crud;
 
 use App\Http\Controllers\Api\v1\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use App\Services\InsumoPrendasService;
 
 class InsumoPrendasController extends Controller
 {
-    public function index(Request $request)
+    protected $insumoPrendasService;
+    protected $fields = ['IdInsumoFk', 'IdPrendaFk', 'Cantidad'];
+
+    public function __construct(InsumoPrendasService $insumoPrendasService)
     {
-        $perPage = $request->get('per_page', 15); // Default to 15 items per page if not set
-        $insumoPrendas = DB::table('insumo_prendas')->paginate($perPage);
-        return response()->json($insumoPrendas);
+        $this->insumoPrendasService = $insumoPrendasService;
     }
 
-
-    public function store(Request $request, $idInsumoFk, $idPrendaFk)
+    public function index(Request $request)
     {
+        $perPage = $request->get('per_page', 15);
+        $items = $this->insumoPrendasService->index($perPage);
+        return response()->json($items);
+    }
+
+    public function store($idInsumoFK, $idPrendaFK,Request $request)
+    {
+        $data = [
+            'IdInsumoFk' => $idInsumoFK,
+            'IdPrendaFk' => $idPrendaFK,
+            'Cantidad' => $request->input('Cantidad')
+        ];
+
+        $rules = [
+            'IdInsumoFk' => 'required|integer|exists:insumo,id',
+            'IdPrendaFk' => 'required|integer|exists:prenda,id',
+            'Cantidad' => 'required|integer'
+        ];
+
+        $validator = Validator::make($data, $rules);
+
+        $cantidad = $validator->getData()['Cantidad'];
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()], 422);
+        }
+
         try {
-            $validatedData = $request->validate([
-                'Cantidad' => 'required|integer',
-            ]);
+            $this->insumoPrendasService->store($idInsumoFK, $idPrendaFK, $cantidad);
 
-            // Ensure the IDs exist in their respective tables
-            $insumoExists = DB::table('insumo')->where('id', $idInsumoFk)->exists();
-            $prendaExists = DB::table('prenda')->where('id', $idPrendaFk)->exists();
-
-            if (!$insumoExists || !$prendaExists) {
-                return response()->json(['message' => 'Invalid Insumo or Prenda ID'], 422);
-            }
-
-            $insumoPrenda = DB::table('insumo_prendas')->insert([
-                'IdInsumoFk' => $idInsumoFk,
-                'IdPrendaFk' => $idPrendaFk,
-                'Cantidad' => $validatedData['Cantidad'],
-            ]);
-
-            return response()->json($insumoPrenda, 201);
-        } catch (ValidationException $e) {
-            return response()->json(['message' => $e->errors()], 422);
+            return response()->json(['message' => 'InsumoPrendas creado correctamente.']);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
@@ -48,32 +56,36 @@ class InsumoPrendasController extends Controller
 
     public function show($idInsumoFK, $idPrendaFK)
     {
-        $insumoPrenda = DB::table('insumo_prendas')->where('IdInsumoFK', $idInsumoFK)->where('IdPrendaFK', $idPrendaFK)->first();
-        if ($insumoPrenda) {
-            return response()->json($insumoPrenda);
-        } else {
-            return response()->json(['message' => 'Not found'], 404);
-        }
+        $item = $this->insumoPrendasService->show($idInsumoFK, $idPrendaFK);
+        return response()->json($item);
     }
 
-    public function update(Request $request, $idInsumoFk, $idPrendaFk)
+    public function update($idInsumoFK,$idPrendaFK,Request $request)
     {
+        $data = [
+            'IdInsumoFk' => $idInsumoFK,
+            'IdPrendaFk' => $idPrendaFK,
+            'Cantidad' => $request->input('Cantidad')
+        ];
+
+        $rules = [
+            'IdInsumoFk' => 'required|integer|exists:insumo,id',
+            'IdPrendaFk' => 'required|integer|exists:prenda,id',
+            'Cantidad' => 'required|integer'
+        ];
+
+        $validator = Validator::make($data, $rules);
+
+        $cantidad = $validator->getData()['Cantidad'];
+
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()], 422);
+        }
+
         try {
-            $validatedData = $request->validate([
-                'Cantidad' => 'required|integer',
-            ]);
+            $this->insumoPrendasService->update($idInsumoFK, $idPrendaFK, $cantidad);
 
-            $updatedRows = DB::table('insumo_prendas')->where('IdInsumoFk', $idInsumoFk)->where('IdPrendaFk', $idPrendaFk)->update([
-                'Cantidad' => $validatedData['Cantidad'],
-            ]);
-
-            if ($updatedRows > 0) {
-                return response()->json(['message' => 'Updated successfully']);
-            } else {
-                return response()->json(['message' => 'Not found'], 404);
-            }
-        } catch (ValidationException $e) {
-            return response()->json(['message' => $e->errors()], 422);
+            return response()->json(['message' => 'InsumoPrendas actualizado correctamente.']);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
@@ -82,12 +94,9 @@ class InsumoPrendasController extends Controller
     public function destroy($idInsumoFK, $idPrendaFK)
     {
         try {
-            $deletedRows = DB::table('insumo_prendas')->where('IdInsumoFK', $idInsumoFK)->where('IdPrendaFK', $idPrendaFK)->delete();
-            if ($deletedRows > 0) {
-                return response()->json(['message' => 'Deleted successfully']);
-            } else {
-                return response()->json(['message' => 'Not found'], 404);
-            }
+            $this->insumoPrendasService->destroy($idInsumoFK, $idPrendaFK);
+
+            return response()->json(['message' => 'InsumoPrendas eliminado.']);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }

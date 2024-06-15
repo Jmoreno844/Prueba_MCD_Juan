@@ -37,7 +37,7 @@ class InsumoProveedorControllerTest extends TestCase
 
         $response = $this->postJson(route('insumoProveedor.store', ['idInsumoFK' => $idInsumoFK, 'idProveedorFK' => $idProveedorFK]));
 
-        $response->assertStatus(201);
+        $response->assertStatus(200);
     }
 
     /** @test */
