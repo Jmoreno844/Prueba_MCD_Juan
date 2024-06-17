@@ -18,6 +18,29 @@ class TallaController extends Controller
         $this->tallaService = $tallaService;
     }
 
+    /**
+ * @OA\Get(
+ *     path="/api/talla",
+ *     tags={"Talla"},
+ *     summary="Obtener lista de tallas",
+ *     description="Retorna una lista de tallas",
+ *     @OA\Response(
+ *         response=200,
+ *         description="Operación exitosa",
+ *         @OA\JsonContent(
+ *             type="array",
+ *             @OA\Items(
+ *                 type="object",
+ *                 @OA\Property(property="Descripcion", type="string", description="Descripción de la talla")
+ *             )
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response="default",
+ *         description="Ha ocurrido un error",
+ *     )
+ * )
+ */
     public function index(Request $request)
     {
         $perPage = $request->get('per_page', 15);
@@ -25,6 +48,29 @@ class TallaController extends Controller
         return response()->json($items);
     }
 
+    /**
+ * @OA\Post(
+ *     path="/api/talla",
+ *     tags={"Talla"},
+ *     summary="Crear una nueva talla",
+ *     description="Crea una nueva talla con los datos enviados",
+ *     @OA\RequestBody(
+ *         description="Información de la talla para crear un nuevo item",
+ *         required=true,
+ *         @OA\JsonContent(
+ *             @OA\Property(property="Descripcion", type="string", description="Descripción de la talla")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=201,
+ *         description="Talla creada correctamente",
+ *     ),
+ *     @OA\Response(
+ *         response="default",
+ *         description="Ha ocurrido un error",
+ *     )
+ * )
+ */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -45,12 +91,73 @@ class TallaController extends Controller
         }
     }
 
+    /**
+ * @OA\Get(
+ *     path="/api/talla/{id}",
+ *     tags={"Talla"},
+ *     summary="Obtener una talla",
+ *     description="Retorna una talla por su ID",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         description="ID de la talla",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer"
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Operación exitosa",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="Descripcion", type="string", description="Descripción de la talla")
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response="default",
+ *         description="Ha ocurrido un error",
+ *     )
+ * )
+ */
     public function show($id)
     {
         $item = $this->tallaService->show($id);
         return response()->json($item);
     }
 
+    /**
+ * @OA\Put(
+ *     path="/api/talla/{id}",
+ *     tags={"Talla"},
+ *     summary="Actualizar una talla",
+ *     description="Actualiza una talla con los datos enviados",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         description="ID de la talla a actualizar",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer"
+ *         )
+ *     ),
+ *     @OA\RequestBody(
+ *         description="Información de la talla para actualizar un item",
+ *         required=true,
+ *         @OA\JsonContent(
+ *             @OA\Property(property="Descripcion", type="string", description="Descripción de la talla")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Talla actualizada correctamente",
+ *     ),
+ *     @OA\Response(
+ *         response="default",
+ *         description="Ha ocurrido un error",
+ *     )
+ * )
+ */
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
@@ -71,6 +178,31 @@ class TallaController extends Controller
         }
     }
 
+    /**
+ * @OA\Delete(
+ *     path="/api/talla/{id}",
+ *     tags={"Talla"},
+ *     summary="Eliminar una talla",
+ *     description="Elimina una talla por su ID",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         description="ID de la talla a eliminar",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer"
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Talla eliminada correctamente",
+ *     ),
+ *     @OA\Response(
+ *         response="default",
+ *         description="Ha ocurrido un error",
+ *     )
+ * )
+ */
     public function destroy($id)
     {
         try {

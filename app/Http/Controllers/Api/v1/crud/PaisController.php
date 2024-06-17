@@ -18,6 +18,29 @@ class PaisController extends Controller
         $this->paisService = $paisService;
     }
 
+    /**
+ * @OA\Get(
+ *     path="/api/pais",
+ *     tags={"Pais"},
+ *     summary="Obtener lista de países",
+ *     description="Retorna una lista de países",
+ *     @OA\Response(
+ *         response=200,
+ *         description="Operación exitosa",
+ *         @OA\JsonContent(
+ *             type="array",
+ *             @OA\Items(
+ *                 type="object",
+ *                 @OA\Property(property="nombre", type="string", description="Nombre del país")
+ *             )
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response="default",
+ *         description="Ha ocurrido un error",
+ *     )
+ * )
+ */
     public function index(Request $request)
     {
         $perPage = $request->get('per_page', 15);
@@ -25,6 +48,29 @@ class PaisController extends Controller
         return response()->json($items);
     }
 
+    /**
+ * @OA\Post(
+ *     path="/api/pais",
+ *     tags={"Pais"},
+ *     summary="Crear un nuevo país",
+ *     description="Crea un nuevo país con los datos enviados",
+ *     @OA\RequestBody(
+ *         description="Información del país para crear un nuevo item",
+ *         required=true,
+ *         @OA\JsonContent(
+ *             @OA\Property(property="nombre", type="string", description="Nombre del país")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=201,
+ *         description="País creado correctamente",
+ *     ),
+ *     @OA\Response(
+ *         response="default",
+ *         description="Ha ocurrido un error",
+ *     )
+ * )
+ */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -45,12 +91,73 @@ class PaisController extends Controller
         }
     }
 
+    /**
+ * @OA\Get(
+ *     path="/api/pais/{id}",
+ *     tags={"Pais"},
+ *     summary="Obtener un país",
+ *     description="Retorna un país por su ID",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         description="ID del país",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer"
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Operación exitosa",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="nombre", type="string", description="Nombre del país")
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response="default",
+ *         description="Ha ocurrido un error",
+ *     )
+ * )
+ */
     public function show($id)
     {
         $item = $this->paisService->show($id);
         return response()->json($item);
     }
 
+    /**
+ * @OA\Put(
+ *     path="/api/pais/{id}",
+ *     tags={"Pais"},
+ *     summary="Actualizar un país",
+ *     description="Actualiza un país con los datos enviados",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         description="ID del país a actualizar",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer"
+ *         )
+ *     ),
+ *     @OA\RequestBody(
+ *         description="Información del país para actualizar un item",
+ *         required=true,
+ *         @OA\JsonContent(
+ *             @OA\Property(property="nombre", type="string", description="Nombre del país")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="País actualizado correctamente",
+ *     ),
+ *     @OA\Response(
+ *         response="default",
+ *         description="Ha ocurrido un error",
+ *     )
+ * )
+ */
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
@@ -71,6 +178,31 @@ class PaisController extends Controller
         }
     }
 
+    /**
+ * @OA\Delete(
+ *     path="/api/pais/{id}",
+ *     tags={"Pais"},
+ *     summary="Eliminar un país",
+ *     description="Elimina un país por su ID",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         description="ID del país a eliminar",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer"
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="País eliminado correctamente",
+ *     ),
+ *     @OA\Response(
+ *         response="default",
+ *         description="Ha ocurrido un error",
+ *     )
+ * )
+ */
     public function destroy($id)
     {
         try {

@@ -9,8 +9,21 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use App\Services\CargoService;
 use App\DTOs\CargoDTO;
+
 class CargoController extends Controller
 {
+/**
+ * @OA\Info(
+ *     title="My API",
+ *     version="1.0.0",
+ *     @OA\Contact(
+ *         email="support@my-api.com",
+ *         name="Support Team"
+ *     )
+ * )
+ */
+
+
     protected $fields = ['descripcion', 'sueldo_base'];
 
     protected $cargoService;
@@ -20,12 +33,53 @@ class CargoController extends Controller
         $this->cargoService = $cargoService;
     }
 
+    /**
+ * @OA\Get(
+ *     tags={"Cargos"},
+ *     path="/api/cargos",
+ *     summary="Obtener lista de cargos",
+ *     @OA\Response(
+ *         response=200,
+ *         description="Lista de cargos"
+ *     )
+ * )
+ */
+
+
     public function index(Request $request)
     {
         $perPage = $request->get('per_page', 15);
         $cargos = $this->cargoService->index($perPage);
         return response()->json($cargos);
     }
+
+    /**
+ * @OA\Post(
+ *     tags={"Cargos"},
+ *     path="/api/cargos",
+ *     summary="Crear un nuevo cargo",
+ *     @OA\RequestBody(
+ *         @OA\MediaType(
+ *             mediaType="application/json",
+ *             @OA\Schema(
+ *                 @OA\Property(
+ *                     property="descripcion",
+ *                     type="string"
+ *                 ),
+ *                 @OA\Property(
+ *                     property="sueldo_base",
+ *                     type="number"
+ *                 ),
+ *                 example={"descripcion": "Gerente", "sueldo_base": 5000}
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Cargo creado correctamente."
+ *     )
+ * )
+ */
 
     public function store(Request $request)
     {
@@ -50,12 +104,70 @@ class CargoController extends Controller
         }
     }
 
+    /**
+ * @OA\Get(
+ *     tags={"Cargos"},
+ *     path="/api/cargos/{id}",
+ *     summary="Obtener un cargo específico",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         description="ID del cargo a obtener",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer"
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Cargo obtenido correctamente."
+ *     )
+ * )
+ */
     public function show($id)
     {
         $cargo = $this->cargoService->show($id);
         return response()->json($cargo);
     }
 
+
+
+/**
+ * @OA\Put(
+ *     tags={"Cargos"},
+ *     path="/api/cargos/{id}",
+ *     summary="Actualizar un cargo específico",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         description="ID del cargo a actualizar",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer"
+ *         )
+ *     ),
+ *     @OA\RequestBody(
+ *         @OA\MediaType(
+ *             mediaType="application/json",
+ *             @OA\Schema(
+ *                 @OA\Property(
+ *                     property="descripcion",
+ *                     type="string"
+ *                 ),
+ *                 @OA\Property(
+ *                     property="sueldo_base",
+ *                     type="number"
+ *                 ),
+ *                 example={"descripcion": "Gerente", "sueldo_base": 5000}
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Cargo actualizado correctamente."
+ *     )
+ * )
+ */
     public function update(Request $request, $id)
     {
         $validatedData = Validator::make($request->all(), [
@@ -80,6 +192,27 @@ class CargoController extends Controller
         }
     }
 
+
+/**
+ * @OA\Delete(
+ *     tags={"Cargos"},
+ *     path="/api/cargos/{id}",
+ *     summary="Eliminar un cargo específico",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         description="ID del cargo a eliminar",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer"
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Cargo eliminado correctamente."
+ *     )
+ * )
+ */
     public function destroy($id)
     {
         try {

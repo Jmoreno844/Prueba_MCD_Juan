@@ -18,6 +18,29 @@ class DepartamentoController extends Controller
         $this->departamentoService = $departamentoService;
     }
 
+
+/**
+     * @OA\Get(
+     *     path="/api/departamento",
+     *     tags={"Departamento"},
+     *     summary="Get list of departamentos",
+     *     description="Returns list of departamentos",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     ),
+     *     @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         description="Number of items per page",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int32"
+     *         )
+     *     )
+     * )
+     */
     public function index(Request $request)
     {
         $perPage = $request->get('per_page', 15);
@@ -25,6 +48,37 @@ class DepartamentoController extends Controller
         return response()->json($items);
     }
 
+
+    /**
+     * @OA\Post(
+     *     path="/api/departamento",
+     *     tags={"Departamento"},
+     *     summary="Store new departamento",
+     *     description="Returns departamento data",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     ),
+     *     @OA\RequestBody(
+     *         description="Departamento to store",
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="nombre",
+     *                 description="Nombre del departamento",
+     *                 type="string",
+     *                 maxLength=50
+     *             ),
+     *             @OA\Property(
+     *                 property="IdPaisFK",
+     *                 description="Foreign key of Pais",
+     *                 type="integer"
+     *             )
+     *         )
+     *     )
+     * )
+     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -46,12 +100,76 @@ class DepartamentoController extends Controller
         }
     }
 
+
+ /**
+     * @OA\Get(
+     *     path="/api/departamento/{id}",
+     *     tags={"Departamento"},
+     *     summary="Get departamento by id",
+     *     description="Returns departamento data",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of departamento that needs to be fetched",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int32"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     )
+     * )
+     */
     public function show($id)
     {
         $item = $this->departamentoService->show($id);
         return response()->json($item);
     }
 
+
+     /**
+     * @OA\Put(
+     *     path="/api/departamento/{id}",
+     *     tags={"Departamento"},
+     *     summary="Update an existing departamento",
+     *     description="Returns updated departamento data",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of departamento that needs to be updated",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int32"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     ),
+     *     @OA\RequestBody(
+     *         description="Departamento to update",
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="nombre",
+     *                 description="Nombre del departamento",
+     *                 type="string",
+     *                 maxLength=50
+     *             ),
+     *             @OA\Property(
+     *                 property="IdPaisFK",
+     *                 description="Foreign key of Pais",
+     *                 type="integer"
+     *             )
+     *         )
+     *     )
+     * )
+     */
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
@@ -73,6 +191,29 @@ class DepartamentoController extends Controller
         }
     }
 
+
+     /**
+     * @OA\Delete(
+     *     path="/api/departamento/{id}",
+     *     tags={"Departamento"},
+     *     summary="Delete an existing departamento",
+     *     description="Deletes departamento data",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of departamento that needs to be deleted",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int32"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     )
+     * )
+     */
     public function destroy($id)
     {
         try {

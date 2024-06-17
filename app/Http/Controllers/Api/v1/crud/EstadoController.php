@@ -18,6 +18,18 @@ class EstadoController extends Controller
         $this->estadoService = $estadoService;
     }
 
+      /**
+     * @OA\Get(
+     *     path="/api/estado",
+     *     tags={"Estado"},
+     *     summary="Obtener todos los estados",
+     *     description="Retorna una lista de estados",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operación exitosa"
+     *     )
+     * )
+     */
     public function index(Request $request)
     {
         $perPage = $request->get('per_page', 15);
@@ -25,6 +37,35 @@ class EstadoController extends Controller
         return response()->json($items);
     }
 
+     /**
+     * @OA\Post(
+     *     path="/api/estado",
+     *     tags={"Estado"},
+     *     summary="Crear un nuevo estado",
+     *     description="Crea un nuevo estado y lo retorna",
+     *     @OA\RequestBody(
+     *         description="Estado a crear",
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="Descripcion",
+     *                     type="string"
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Estado creado correctamente"
+     *     ),
+      *     @OA\Response(
+     *         response=422,
+     *         description="Datos de entrada no válidos"
+     *     )
+     * )
+     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -45,12 +86,71 @@ class EstadoController extends Controller
         }
     }
 
+     /**
+     * @OA\Get(
+     *     path="/api/estado/{id}",
+     *     tags={"Estado"},
+     *     summary="Obtener un estado por ID",
+     *     description="Retorna un estado por su ID",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID del estado a obtener",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operación exitosa"
+     *     )
+     * )
+     */
     public function show($id)
     {
         $item = $this->estadoService->show($id);
         return response()->json($item);
     }
 
+     /**
+     * @OA\Put(
+     *     path="/api/estado/{id}",
+     *     tags={"Estado"},
+     *     summary="Actualizar un estado por ID",
+     *     description="Actualiza un estado por su ID",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID del estado a actualizar",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         description="Estado a actualizar",
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="Descripcion",
+     *                     type="string"
+     *                 )
+       *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Estado actualizado correctamente"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Datos de entrada no válidos"
+     *     )
+     * )
+     */
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
@@ -71,6 +171,27 @@ class EstadoController extends Controller
         }
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/api/estado/{id}",
+     *     tags={"Estado"},
+     *     summary="Eliminar un estado por ID",
+     *     description="Elimina un estado por su ID",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID del estado a eliminar",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Estado eliminado correctamente"
+     *     )
+     * )
+     */
     public function destroy($id)
     {
         try {

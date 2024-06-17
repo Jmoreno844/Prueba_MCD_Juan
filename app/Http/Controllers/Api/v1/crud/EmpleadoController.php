@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api\v1\crud;
 
 use App\DTOs\EmpleadoDTO;
@@ -18,6 +19,32 @@ class EmpleadoController extends Controller
         $this->empleadoService = $empleadoService;
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/empleado",
+     *     tags={"Empleado"},
+     *     summary="Obtener todos los empleados",
+     *     description="Retorna una lista de empleados",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operación exitosa",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 type="object",
+     *                 @OA\Property(property="nombre", type="string"),
+     *                 @OA\Property(property="idCargoFK", type="integer"),
+     *                 @OA\Property(property="fecha_ingreso", type="string", format="date"),
+     *                 @OA\Property(property="IdMunicipioFK", type="integer")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error del servidor"
+     *     )
+     * )
+     */
     public function index(Request $request)
     {
         $perPage = $request->get('per_page', 15);
@@ -25,13 +52,46 @@ class EmpleadoController extends Controller
         return response()->json($items);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/empleado",
+     *     tags={"Empleado"},
+     *     summary="Crear un nuevo empleado",
+     *     description="Crea un nuevo empleado y lo retorna",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="nombre", type="string"),
+     *             @OA\Property(property="idCargoFK", type="integer"),
+     *             @OA\Property(property="fecha_ingreso", type="string", format="date"),
+     *             @OA\Property(property="IdMunicipioFK", type="integer")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Empleado creado correctamente",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="nombre", type="string"),
+     *             @OA\Property(property="idCargoFK", type="integer"),
+     *             @OA\Property(property="fecha_ingreso", type="string", format="date"),
+     *             @OA\Property(property="IdMunicipioFK", type="integer")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error del servidor"
+     *     )
+     * )
+     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'nombre' => 'required|max:50',
-                    'idCargoFK' => 'required|integer',
-                    'fecha_ingreso' => 'required|date',
-                    'IdMunicipioFK' => 'required|integer'
+            'idCargoFK' => 'required|integer',
+            'fecha_ingreso' => 'required|date',
+            'IdMunicipioFK' => 'required|integer'
         ]);
 
         if ($validator->fails()) {
@@ -48,19 +108,87 @@ class EmpleadoController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/empleado/{id}",
+     *     tags={"Empleado"},
+     *     summary="Obtener un empleado",
+     *     description="Retorna un empleado por su ID",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operación exitosa",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="nombre", type="string"),
+     *             @OA\Property(property="idCargoFK", type="integer"),
+     *             @OA\Property(property="fecha_ingreso", type="string", format="date"),
+     *             @OA\Property(property="IdMunicipioFK", type="integer")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error del servidor"
+     *     )
+     * )
+     */
     public function show($id)
     {
         $item = $this->empleadoService->show($id);
         return response()->json($item);
     }
 
+    /**
+     * @OA\Put(
+     *     path="/api/empleado/{id}",
+     *     tags={"Empleado"},
+     *     summary="Actualizar un empleado",
+     *     description="Actualiza un empleado por su ID",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="nombre", type="string"),
+     *             @OA\Property(property="idCargoFK", type="integer"),
+     *             @OA\Property(property="fecha_ingreso", type="string", format="date"),
+     *             @OA\Property(property="IdMunicipioFK", type="integer")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Empleado actualizado correctamente",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="nombre", type="string"),
+     *             @OA\Property(property="idCargoFK", type="integer"),
+     *             @OA\Property(property="fecha_ingreso", type="string", format="date"),
+     *             @OA\Property(property="IdMunicipioFK", type="integer")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error del servidor"
+     *     )
+     * )
+     */
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'nombre' => 'required|max:50',
-                    'idCargoFK' => 'required|integer',
-                    'fecha_ingreso' => 'required|date',
-                    'IdMunicipioFK' => 'required|integer'
+            'idCargoFK' => 'required|integer',
+            'fecha_ingreso' => 'required|date',
+            'IdMunicipioFK' => 'required|integer'
         ]);
 
         if ($validator->fails()) {
@@ -77,6 +205,28 @@ class EmpleadoController extends Controller
         }
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/api/empleado/{id}",
+     *     tags={"Empleado"},
+     *     summary="Eliminar un empleado",
+     *     description="Elimina un empleado por su ID",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Empleado eliminado correctamente",
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error del servidor"
+     *     )
+     * )
+     */
     public function destroy($id)
     {
         try {

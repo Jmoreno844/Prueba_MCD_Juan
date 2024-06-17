@@ -18,6 +18,18 @@ class GeneroController extends Controller
         $this->generoService = $generoService;
     }
 
+     /**
+     * @OA\Get(
+     *     path="/api/genero",
+     *     tags={"Genero"},
+     *     summary="Obtener todos los géneros",
+     *     description="Retorna una lista de géneros",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operación exitosa"
+     *     )
+     * )
+     */
     public function index(Request $request)
     {
         $perPage = $request->get('per_page', 15);
@@ -25,6 +37,35 @@ class GeneroController extends Controller
         return response()->json($items);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/genero",
+     *     tags={"Genero"},
+     *     summary="Crear un nuevo género",
+     *     description="Crea un nuevo género y lo retorna",
+     *     @OA\RequestBody(
+     *         description="Género a crear",
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="descripcion",
+     *                     type="string"
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Género creado correctamente"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Datos de entrada no válidos"
+     *     )
+     * )
+     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -45,12 +86,72 @@ class GeneroController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/genero/{id}",
+     *     tags={"Genero"},
+     *     summary="Obtener un género por ID",
+     *     description="Retorna un género por su ID",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID del género a obtener",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operación exitosa"
+     *     )
+     * )
+     */
     public function show($id)
     {
         $item = $this->generoService->show($id);
         return response()->json($item);
     }
 
+
+    /**
+     * @OA\Put(
+     *     path="/api/genero/{id}",
+     *     tags={"Genero"},
+     *     summary="Actualizar un género por ID",
+     *     description="Actualiza un género por su ID",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID del género a actualizar",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         description="Género a actualizar",
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="descripcion",
+     *                     type="string"
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Género actualizado correctamente"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Datos de entrada no válidos"
+     *     )
+     * )
+     */
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
@@ -71,6 +172,27 @@ class GeneroController extends Controller
         }
     }
 
+     /**
+     * @OA\Delete(
+     *     path="/api/genero/{id}",
+     *     tags={"Genero"},
+     *     summary="Eliminar un género por ID",
+     *     description="Elimina un género por su ID",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID del género a eliminar",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Género eliminado correctamente"
+     *     )
+     * )
+     */
     public function destroy($id)
     {
         try {

@@ -18,13 +18,60 @@ class MunicipioController extends Controller
         $this->municipioService = $municipioService;
     }
 
+    /**
+ * @OA\Get(
+ *     path="/api/municipio",
+ *     tags={"Municipio"},
+ *     summary="Obtener lista de municipios",
+ *     description="Retorna una lista de municipios",
+ *     @OA\Response(
+ *         response=200,
+ *         description="Operación exitosa",
+ *         @OA\JsonContent(
+ *             type="array",
+ *             @OA\Items(
+ *                 type="object",
+ *                 @OA\Property(property="nombre", type="string", description="Nombre del municipio"),
+ *                 @OA\Property(property="idDepartamentoFK", type="integer", description="ID del departamento")
+ *             )
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response="default",
+ *         description="Ha ocurrido un error",
+ *     )
+ * )
+ */
     public function index(Request $request)
     {
         $perPage = $request->get('per_page', 15);
         $items = $this->municipioService->index($perPage);
         return response()->json($items);
     }
-
+/**
+ * @OA\Post(
+ *     path="/api/municipio",
+ *     tags={"Municipio"},
+ *     summary="Crear un nuevo municipio",
+ *     description="Crea un nuevo municipio con los datos enviados",
+ *     @OA\RequestBody(
+ *         description="Información del municipio para crear un nuevo item",
+ *         required=true,
+ *         @OA\JsonContent(
+ *             @OA\Property(property="nombre", type="string", description="Nombre del municipio"),
+ *             @OA\Property(property="idDepartamentoFK", type="integer", description="ID del departamento")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=201,
+ *         description="Municipio creado correctamente",
+ *     ),
+ *     @OA\Response(
+ *         response="default",
+ *         description="Ha ocurrido un error",
+ *     )
+ * )
+ */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -46,12 +93,75 @@ class MunicipioController extends Controller
         }
     }
 
+/**
+ * @OA\Get(
+ *     path="/api/municipio/{id}",
+ *     tags={"Municipio"},
+ *     summary="Obtener un municipio",
+ *     description="Retorna un municipio por su ID",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         description="ID del municipio",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer"
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Operación exitosa",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="nombre", type="string", description="Nombre del municipio"),
+ *             @OA\Property(property="idDepartamentoFK", type="integer", description="ID del departamento")
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response="default",
+ *         description="Ha ocurrido un error",
+ *     )
+ * )
+ */
     public function show($id)
     {
         $item = $this->municipioService->show($id);
         return response()->json($item);
     }
 
+    /**
+ * @OA\Put(
+ *     path="/api/municipio/{id}",
+ *     tags={"Municipio"},
+ *     summary="Actualizar un municipio",
+ *     description="Actualiza un municipio con los datos enviados",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         description="ID del municipio a actualizar",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer"
+ *         )
+ *     ),
+ *     @OA\RequestBody(
+ *         description="Información del municipio para actualizar un item",
+ *         required=true,
+ *         @OA\JsonContent(
+ *             @OA\Property(property="nombre", type="string", description="Nombre del municipio"),
+ *             @OA\Property(property="idDepartamentoFK", type="integer", description="ID del departamento")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Municipio actualizado correctamente",
+ *     ),
+ *     @OA\Response(
+ *         response="default",
+ *         description="Ha ocurrido un error",
+ *     )
+ * )
+ */
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
@@ -73,6 +183,31 @@ class MunicipioController extends Controller
         }
     }
 
+    /**
+ * @OA\Delete(
+ *     path="/api/municipio/{id}",
+ *     tags={"Municipio"},
+ *     summary="Eliminar un municipio",
+ *     description="Elimina un municipio por su ID",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         description="ID del municipio a eliminar",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer"
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Municipio eliminado correctamente",
+ *     ),
+ *     @OA\Response(
+ *         response="default",
+ *         description="Ha ocurrido un error",
+ *     )
+ * )
+ */
     public function destroy($id)
     {
         try {

@@ -3,228 +3,504 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Api\v1\Controller;
+use App\Services\ConsultasService;
 use Illuminate\Http\Request;
-use DB;
 
+/**
+ * @OA\Tag(
+ *     name="Consultas",
+ *     description="Endpoints para consultas de datos"
+ * )
+ */
 class ConsultasController extends Controller
 {
-    public function ventasJulio2023(){
-        $results = DB::table('venta')
-                    ->whereMonth('Fecha', 7)
-                    ->whereYear('fecha', 2023)
-                    ->paginate(10);
+    protected $consultasService;
+
+    public function __construct(ConsultasService $consultasService)
+    {
+        $this->consultasService = $consultasService;
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/api/ventas-julio-2023",
+     *     tags={"Consultas"},
+     *     summary="Obtener ventas de Julio 2023",
+     *     description="Retorna las ventas de Julio 2023",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operación exitosa",
+     *     ),
+     *     @OA\Response(
+     *         response="default",
+     *         description="Ha ocurrido un error",
+     *     )
+     * )
+     */
+    public function ventasJulio2023()
+    {
+        $results = $this->consultasService->ventasJulio2023();
         return response()->json($results);
     }
 
-    public function empleadosConCargosYMunicipios() {
-        $results = DB::table('empleado as emp')
-                    ->join('cargos as c', 'emp.idCargoFK', '=', 'c.id')
-                    ->join('municipio as m', 'emp.IdMunicipioFK', '=', 'm.id')
-                    ->select('emp.*', 'c.descripcion as Cargo', 'm.nombre as Municipio')
-                    ->paginate(10);
+    /**
+     * @OA\Get(
+     *     path="/api/empleados-cargos-municipios",
+     *     tags={"Consultas"},
+     *     summary="Obtener empleados con cargos y municipios",
+     *     description="Retorna una lista de empleados con sus cargos y municipios",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operación exitosa",
+     *     ),
+     *     @OA\Response(
+     *         response="default",
+     *         description="Ha ocurrido un error",
+     *     )
+     * )
+     */
+    public function empleadosConCargosYMunicipios()
+    {
+        $results = $this->consultasService->empleadosConCargosYMunicipios();
         return response()->json($results);
     }
 
-    public function ventasConClientesYFormaPago() {
-        $results = DB::table('venta as v')
-                    ->join('cliente as c', 'v.IdClienteFK', '=', 'c.id')
-                    ->join('forma_pago as fpago', 'v.IdFormaPagoFK', '=', 'fpago.id')
-                    ->select('v.*', 'c.*', 'fpago.Descripcion')
-                    ->paginate(10);
+    /**
+     * @OA\Get(
+     *     path="/api/ventas-clientes-forma-pago",
+     *     tags={"Consultas"},
+     *     summary="Obtener ventas con clientes y forma de pago",
+     *     description="Retorna una lista de ventas con información de clientes y forma de pago",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operación exitosa",
+     *     ),
+     *     @OA\Response(
+     *         response="default",
+     *         description="Ha ocurrido un error",
+     *     )
+     * )
+     */
+    public function ventasConClientesYFormaPago()
+    {
+        $results = $this->consultasService->ventasConClientesYFormaPago();
         return response()->json($results);
     }
 
-    public function ordenesConDetalles() {
-        $results = DB::table('orden as o')
-                    ->join('empleado as e', 'o.IdEmpleadoFK', '=', 'e.id')
-                    ->join('cliente as c', 'o.IdClienteFK', '=', 'c.id')
-                    ->join('estado as est', 'o.IdEstadoFK', '=', 'est.id')
-                    ->select('o.*', 'e.nombre as nombreEmpleado', 'c.nombre as nombreCliente', 'est.Descripcion as estadoFactura')
-                    ->paginate(10);
+    /**
+     * @OA\Get(
+     *     path="/api/ordenes-detalles",
+     *     tags={"Consultas"},
+     *     summary="Obtener ordenes con detalles y nombres de clientes y empleados asociados.",
+     *     description="Retorna una lista de ordenes con sus detalles",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operación exitosa",
+     *     ),
+     *     @OA\Response(
+     *         response="default",
+     *         description="Ha ocurrido un error",
+     *     )
+     * )
+     */
+    public function ordenesConDetalles()
+    {
+        $results = $this->consultasService->ordenesConDetalles();
         return response()->json($results);
     }
 
-    public function inventarioConDetalles() {
-        $results = DB::table('inventario as i')
-                    ->join('prenda', 'i.IdPrendaFK', '=', 'prenda.id')
-                    ->join('color', 'i.IdColorFK', '=', 'color.id')
-                    ->join('talla', 'i.IdTallaFK', '=', 'talla.id')
-                    ->join('genero as g', 'prenda.IdGeneroFK', '=', 'g.id')
-                    ->join('tipo_proteccion as tp', 'prenda.IdTipoProteccionFK', '=', 'tp.id')
-                    ->select('i.CodInv', 'prenda.id', 'prenda.Codigo', 'prenda.Nombre', 'prenda.ValorUnitUsd', 'prenda.ValorUnitCop',
-                             'tp.Descripcion as tipoProteccion', 'color.Descripcion as color', 'talla.Descripcion as talla', 'g.descripcion as genero')
-                    ->paginate(10);
+    /**
+     * @OA\Get(
+     *     path="/api/inventario-detalles",
+     *     tags={"Consultas"},
+     *     summary="Obtener las prendas en inventario con sus detalles,talla y color.",
+     *     description="Retorna una lista del inventario con sus detalles",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operación exitosa",
+     *     ),
+     *     @OA\Response(
+     *         response="default",
+     *         description="Ha ocurrido un error",
+     *     )
+     * )
+     */
+    public function inventarioConDetalles()
+    {
+        $results = $this->consultasService->inventarioConDetalles();
         return response()->json($results);
     }
 
-    public function proovedoresConInsumos() {
-        $results = DB::table('proveedor as p')
-                    ->join('insumo_proveedor', 'insumo_proveedor.IdProveedorFK', '=', 'p.id')
-                    ->join('insumo as i', 'insumo_proveedor.IdInsumoFK', '=', 'i.id')
-                    ->join('tipo_persona as tp', 'p.IdTipoPersona', '=', 'tp.id')
-                    ->join('municipio', 'p.IdMunicipioFK', '=', 'municipio.id')
-                    ->select('p.id as id_proveedor', 'p.NitProovedor', 'p.Nombre as nombre_proveedor', 'tp.Nombre as tipo_persona',
-                             'municipio.Nombre as municipio', 'i.id as id_insumo', 'i.Nombre as nombre_insumo', 'i.valor_unit',
-                             'i.stock_min', 'i.stock_max')
-                    ->paginate(10);
+    /**
+     * @OA\Get(
+     *     path="/api/proveedores-insumos",
+     *     tags={"Consultas"},
+     *     summary="Obtener proveedores con insumos",
+     *     description="Retorna una lista de proveedores con sus insumos",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operación exitosa",
+     *     ),
+     *     @OA\Response(
+     *         response="default",
+     *         description="Ha ocurrido un error",
+     *     )
+     * )
+     */
+    public function proovedoresConInsumos()
+    {
+        $results = $this->consultasService->proovedoresConInsumos();
         return response()->json($results);
     }
 
-    public function cantidadVentasPorEmpleado() {
-        $results = DB::table('empleado as e')
-                    ->join('cargos', 'e.idCargoFK', '=', 'cargos.id')
-                    ->join('municipio', 'e.IdMunicipioFK', '=', 'municipio.id')
-                    ->join('venta', 'venta.IdEmpleadoFK', '=', 'e.id')
-                    ->select('e.id as id_empleado', 'e.nombre', 'e.fecha_ingreso', 'cargos.descripcion as cargo', 'municipio.nombre as municipio',
-                             DB::raw('COUNT(venta.id) AS cantidad_ventas'))
-                    ->groupBy('e.id', 'e.nombre', 'e.fecha_ingreso', 'cargos.descripcion', 'municipio.nombre')
-                    ->paginate(10);
+    /**
+     * @OA\Get(
+     *     path="/api/cantidad-ventas-empleado",
+     *     tags={"Consultas"},
+     *     summary="Obtener cantidad de ventas por empleado",
+     *     description="Retorna la cantidad de ventas realizadas por cada empleado",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operación exitosa",
+     *     ),
+     *     @OA\Response(
+     *         response="default",
+     *         description="Ha ocurrido un error",
+     *     )
+     * )
+     */
+    public function cantidadVentasPorEmpleado()
+    {
+        $results = $this->consultasService->cantidadVentasPorEmpleado();
         return response()->json($results);
     }
 
-    public function ordenesEnProceso() {
-        $results = DB::table('orden')
-                    ->join('cliente', 'orden.IdClienteFK', '=', 'cliente.id')
-                    ->join('empleado', 'orden.IdEmpleadoFK', '=', 'empleado.id')
-                    ->join('estado', 'orden.IdEstadoFK', '=', 'estado.id')
-                    ->select('orden.id as id_orden', 'orden.fecha', 'estado.Descripcion as estado_orden', 'empleado.nombre as nombre_empleado',
-                             'cliente.nombre as nombre_cliente')
-                    ->where('estado.id', 6)
-                    ->paginate(10);
+    /**
+     * @OA\Get(
+     *     path="/api/ordenes-en-proceso",
+     *     tags={"Consultas"},
+     *     summary="Obtener ordenes en proceso junto clientes y asociados.",
+     *     description="Retorna una lista de ordenes que están en proceso junto los ell nombre de clientes y
+     *      empleados asociados a cada orden.",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operación exitosa",
+     *     ),
+     *     @OA\Response(
+     *         response="default",
+     *         description="Ha ocurrido un error",
+     *     )
+     * )
+     */
+    public function ordenesEnProceso()
+    {
+        $results = $this->consultasService->ordenesEnProceso();
         return response()->json($results);
     }
 
-    public function empresaYMunicipio() {
-        $results = DB::table('empresa')
-                    ->join('municipio', 'empresa.IdMunicipioFK', '=', 'municipio.id')
-                    ->select('empresa.*', 'municipio.nombre as nombre_municipio')
-                    ->paginate(10);
+    /**
+     * @OA\Get(
+     *     path="/api/empresa-municipio",
+     *     tags={"Consultas"},
+     *     summary="Obtener empresas con municipio",
+     *     description="Retorna una lista de empresas con su municipio",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operación exitosa",
+     *     ),
+     *     @OA\Response(
+     *         response="default",
+     *         description="Ha ocurrido un error",
+     *     )
+     * )
+     */
+    public function empresaYMunicipio()
+    {
+        $results = $this->consultasService->empresaYMunicipio();
         return response()->json($results);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/clientesEnCompraFechaEspecifica/{fecha}",
+     *     tags={"Consultas"},
+     *     summary="Obtener clientes en una fecha específica",
+     *     description="Retorna una lista de clientes que hicieron compras en una fecha específica",
+     *     @OA\Parameter(
+     *         required=true,
+     *         name="fecha",
+     *         in="path",
+     *        description="Fecha en formato 'YYYY-MM-DD'",
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operación exitosa",
+     *     ),
+     *     @OA\Response(
+     *         response="default",
+     *         description="Ha ocurrido un error",
+     *     )
+     * )
+     */
     public function clientesEnCompraFechaEspecifica($fecha)
     {
-        $results = DB::table('detalle_venta as d')
-                    ->join('venta as v', 'd.idVentaFK', '=', 'v.id')
-                    ->join('cliente as c', 'v.IdClienteFK', '=', 'c.id')
-                    ->select('c.nombre as nombre_cliente', DB::raw('COUNT(d.idVentaFK) as cantidad_articulos_comprados'))
-                    ->whereDate('v.Fecha', $fecha)
-                    ->groupBy('c.nombre')
-                    ->paginate(10);
+        $results = $this->consultasService->clientesEnCompraFechaEspecifica($fecha);
         return response()->json($results);
     }
 
-    public function empleadosDuracionEmpleo() {
-        $results = DB::table('empleado')
-                    ->select('empleado.*', DB::raw('TIMESTAMPDIFF(YEAR, empleado.fecha_ingreso, CURDATE()) as num_años_transcurridos'))
-                    ->paginate(10);
+    /**
+     * @OA\Get(
+     *     path="/api/empleados-duracion-empleo",
+     *     tags={"Consultas"},
+     *     summary="Obtener duración de empleo de empleados",
+     *     description="Retorna la duración del empleo de los empleados",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operación exitosa",
+     *     ),
+     *     @OA\Response(
+     *         response="default",
+     *         description="Ha ocurrido un error",
+     *     )
+     * )
+     */
+    public function empleadosDuracionEmpleo()
+    {
+        $results = $this->consultasService->empleadosDuracionEmpleo();
         return response()->json($results);
     }
 
-    public function ValorTotalVentasPorPrendaUsd() {
-        $results = DB::table('prenda')
-                    ->join('inventario', 'inventario.IdPrendaFK', '=', 'prenda.id')
-                    ->join('detalle_venta', 'detalle_venta.IdInventarioFK', '=', 'inventario.id')
-                    ->select('prenda.id as id_prenda', 'prenda.Nombre as nombre_prenda', DB::raw('SUM(inventario.Cantidad) as cantidad_prendas_vendidas'),
-                             'prenda.ValorUnitUsd as valor_unitario_usd', DB::raw('SUM(inventario.Cantidad)*prenda.ValorUnitUsd as valor_ventas_usd'))
-                    ->groupBy('prenda.id', 'prenda.Nombre', 'prenda.ValorUnitUsd')
-                    ->paginate(10);
+    /**
+     * @OA\Get(
+     *     path="/api/valor-total-ventas-por-prenda-usd",
+     *     tags={"Consultas"},
+     *     summary="Obtener valor total de ventas por prenda en USD de todas las prendas.",
+     *     description="Retorna el valor total de ventas por prenda en USD de todas las prendas.",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operación exitosa",
+     *     ),
+     *     @OA\Response(
+     *         response="default",
+     *         description="Ha ocurrido un error",
+     *     )
+     * )
+     */
+    public function valorTotalVentasPorPrendaUsd()
+    {
+        $results = $this->consultasService->valorTotalVentasPorPrendaUsd();
         return response()->json($results);
     }
 
-    public function cantidadesMaxYMinFabricacionDeInsumoPorPrendas() {
-        $results = DB::table('prenda')
-                    ->join('insumo_prendas', 'insumo_prendas.IdPrendaFK', '=', 'prenda.id')
-                    ->join('insumo', 'insumo_prendas.IdInsumoFK', '=', 'insumo.id')
-                    ->select('prenda.id as id_prenda', 'prenda.Nombre as nombre_prenda', 'insumo.stock_min as cantidad_minima_insumos_para_fabricacion',
-                             'insumo.stock_max as cantidad_maxima_insumos_para_fabricacion')
-                    ->paginate(10);
+    /**
+     * @OA\Get(
+     *     path="/api/cantidades-max-y-min-fabricacion-de-insumo-por-prendas",
+     *     tags={"Consultas"},
+     *     summary="Obtener cantidades máximas y mínimas de fabricación de insumo por prendas",
+     *     description="Retorna las cantidades máximas y mínimas de fabricación de insumo por prendas",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operación exitosa",
+     *     ),
+     *     @OA\Response(
+     *         response="default",
+     *         description="Ha ocurrido un error",
+     *     )
+     * )
+     */
+    public function cantidadesMaxYMinFabricacionDeInsumoPorPrendas()
+    {
+        $results = $this->consultasService->cantidadesMaxYMinFabricacionDeInsumoPorPrendas();
         return response()->json($results);
     }
 
-    public function stockPrendas() {
-        $results = DB::table('prenda')
-                    ->join('inventario', 'inventario.IdPrendaFK', '=', 'prenda.id')
-                    ->join('tipo_proteccion', 'prenda.IdTipoProteccionFK', '=', 'tipo_proteccion.id')
-                    ->join('genero', 'prenda.IdGeneroFK', '=', 'genero.id')
-                    ->join('talla', 'inventario.IdTallaFK', '=', 'talla.id')
-                    ->join('color', 'inventario.IdColorFK', '=', 'color.id')
-                    ->select('prenda.id as id_prenda', 'prenda.Nombre', 'genero.descripcion as genero', 'talla.Descripcion as talla',
-                             'color.Descripcion as color', 'tipo_proteccion.Descripcion as tipo_proteccion', 'prenda.ValorUnitCop', 'prenda.ValorUnitUsd',
-                             'inventario.Cantidad')
-                    ->paginate(10);
+    /**
+     * @OA\Get(
+     *     path="/api/stock-prendas",
+     *     tags={"Consultas"},
+     *     summary="Obtener stock de prendas.",
+     *     description="Retorna una lista del prendas en stock.",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operación exitosa",
+     *     ),
+     *     @OA\Response(
+     *         response="default",
+     *         description="Ha ocurrido un error",
+     *     )
+     * )
+     */
+    public function stockPrendas()
+    {
+        $results = $this->consultasService->stockPrendas();
         return response()->json($results);
     }
 
-    public function ventasRangoFechas($fecha_inicio, $fecha_fin) {
-        $results = DB::table('venta')
-                    ->join('empleado', 'venta.IdEmpleadoFK', '=', 'empleado.id')
-                    ->join('forma_pago', 'venta.IdFormaPagoFK', '=', 'forma_pago.id')
-                    ->select('venta.*', 'empleado.nombre as nombre_empleado', 'forma_pago.descripcion as descripcion_pago')
-                    ->whereBetween('venta.fecha', [$fecha_inicio, $fecha_fin])
-                    ->paginate(10);
+    /**
+     * @OA\Get(
+     *     path="/api/ventas-rango-fechas/{fecha_inicio}/{fecha_fin",
+     *     tags={"Consultas"},
+     *     summary="Obtener ventas en un rango de fechas",
+     *     description="Retorna una lista de ventas en un rango de fechas",
+     *   @OA\Parameter(
+     *         required=true,
+     *         name="fecha_inicio",
+     *         in="path",
+     *        description="Fecha en formato 'YYYY-MM-DD'",
+     *     ),
+     *  @OA\Parameter(
+     *         required=true,
+     *         name="fecha_fin",
+     *         in="path",
+     *        description="Fecha en formato 'YYYY-MM-DD'",
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operación exitosa",
+     *     ),
+     *     @OA\Response(
+     *         response="default",
+     *         description="Ha ocurrido un error",
+     *     )
+     * )
+     */
+    public function ventasRangoFechas($fecha_inicio, $fecha_fin = null)
+    {
+        $results = $this->consultasService->ventasRangoFechas($fecha_inicio, $fecha_fin);
         return response()->json($results);
     }
 
-    public function prendasConEstado() {
-        $results = DB::table('prenda')
-                    ->join('estado', 'prenda.IdEstadoFK', '=', 'estado.id')
-                    ->select('prenda.id as id_prenda', 'prenda.Nombre', 'prenda.ValorUnitUsd', 'estado.Descripcion as estado')
-                    ->paginate(10);
+
+
+    /**
+     * @OA\Get(
+     *     path="/api/prendas-estado",
+     *     tags={"Consultas"},
+     *     summary="Obtener prendas con estado",
+     *     description="Retorna una lista de prendas con su estado",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operación exitosa",
+     *     ),
+     *     @OA\Response(
+     *         response="default",
+     *         description="Ha ocurrido un error",
+     *     )
+     * )
+     */
+    public function prendasConEstado()
+    {
+        $results = $this->consultasService->prendasConEstado();
         return response()->json($results);
     }
 
-    public function empleadosPorFechaIngreso() {
-        $results = DB::table('empleado')
-                    ->join('cargos', 'empleado.idCargoFK', '=', 'cargos.id')
-                    ->select('empleado.id as id_empleado', 'empleado.nombre', 'cargos.descripcion as cargo', 'empleado.fecha_ingreso')
-                    ->orderBy('empleado.fecha_ingreso', 'DESC')
-                    ->paginate(10);
+    /**
+     * @OA\Get(
+     *     path="/api/empleados-fecha-ingreso",
+     *     tags={"Consultas"},
+     *     summary="Obtener empleados por fecha de ingreso",
+     *     description="Retorna una lista de empleados por su fecha de ingreso",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operación exitosa",
+     *     ),
+     *     @OA\Response(
+     *         response="default",
+     *         description="Ha ocurrido un error",
+     *     )
+     * )
+     */
+    public function empleadosPorFechaIngreso()
+    {
+        $results = $this->consultasService->empleadosPorFechaIngreso();
         return response()->json($results);
     }
 
-    public function tipoProteccionConSuCantidadPrendas() {
-        $results = DB::table('tipo_proteccion')
-                    ->join('prenda', 'tipo_proteccion.id', '=', 'prenda.IdTipoProteccionFK')
-                    ->join('inventario', 'prenda.id', '=', 'inventario.IdPrendaFK')
-                    ->select('tipo_proteccion.id as id_tipo_proteccion', 'tipo_proteccion.Descripcion as nombre',
-                             DB::raw('SUM(inventario.Cantidad) as cantidad_prendas'))
-                    ->groupBy('tipo_proteccion.id')
-                    ->paginate(10);
+    /**
+     * @OA\Get(
+     *     path="/api/tipo-proteccion-cantidad-prendas",
+     *     tags={"Consultas"},
+     *     summary="Obtener tipo de protección con su cantidad de prendas",
+     *     description="Retorna una lista del tipo de protección con su cantidad de prendas",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operación exitosa",
+     *     ),
+     *     @OA\Response(
+     *         response="default",
+     *         description="Ha ocurrido un error",
+     *     )
+     * )
+     */
+    public function tipoProteccionConSuCantidadPrendas()
+    {
+        $results = $this->consultasService->tipoProteccionConSuCantidadPrendas();
         return response()->json($results);
     }
 
-    public function estadoConCantidadPrendas() {
-        $results = DB::table('empleado')
-                    ->join('cargos', 'empleado.idCargoFK', '=', 'cargos.id')
-                    ->select('empleado.id as id_empleado', 'empleado.nombre', 'cargos.descripcion as cargo', 'empleado.fecha_ingreso')
-                    ->orderBy('empleado.fecha_ingreso')
-                    ->paginate(10);
+    /**
+     * @OA\Get(
+     *     path="/api/estado-cantidad-prendas",
+     *     tags={"Consultas"},
+     *     summary="Obtener estado con cantidad de prendas",
+     *     description="Retorna una lista del estado con su cantidad de prendas",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operación exitosa",
+     *     ),
+     *     @OA\Response(
+     *         response="default",
+     *         description="Ha ocurrido un error",
+     *     )
+     * )
+     */
+    public function estadoConCantidadPrendas()
+    {
+        $results = $this->consultasService->estadoConCantidadPrendas();
         return response()->json($results);
     }
 
-    public function prendaJuntoValorTotalVentasCop() {
-        $results = DB::table('prenda')
-                    ->join('inventario', 'inventario.IdPrendaFK', '=', 'prenda.id')
-                    ->join('detalle_venta', 'detalle_venta.IdInventarioFK', '=', 'inventario.id')
-                    ->join('venta', 'venta.id', '=', 'detalle_venta.IdVentaFK')
-                    ->select('prenda.id as id_prenda', 'prenda.Nombre as nombre_prenda', DB::raw('SUM(inventario.Cantidad) as cantidad_prendas_vendidas'),
-                             'prenda.ValorUnitCop as valor_unitario_cop', DB::raw('SUM(detalle_venta.Cantidad)*prenda.ValorUnitCop as valor_ventas_cop'))
-                    ->groupBy('prenda.id')
-                    ->paginate(10);
+    /**
+     * @OA\Get(
+     *     path="/api/prenda-junto-valor-total-ventas-cop",
+     *     tags={"Consultas"},
+     *     summary="Obtener prenda junto a su valor total de ventas en COP",
+     *     description="Retorna una lista de prendas con su valor total de ventas en COP",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operación exitosa",
+     *     ),
+     *     @OA\Response(
+     *         response="default",
+     *         description="Ha ocurrido un error",
+     *     )
+     * )
+     */
+    public function prendaJuntoValorTotalVentasCop()
+    {
+        $results = $this->consultasService->prendaJuntoValorTotalVentasCop();
         return response()->json($results);
     }
 
-    public function totalGastadoPorCliente() {
-        $results = DB::table('cliente')
-                    ->join('venta', 'cliente.id', '=', 'venta.IdClienteFK')
-                    ->join('detalle_venta', 'detalle_venta.IdVentaFK', '=', 'venta.id')
-                    ->join('inventario', 'inventario.id', '=', 'detalle_venta.IdInventarioFK')
-                    ->join('prenda', 'inventario.IdPrendaFK', '=', 'prenda.id')
-                    ->select('cliente.id as id_cliente', 'cliente.nombre as nombre_cliente', DB::raw('COUNT(venta.IdClienteFK) as ventas_hechas'),
-                             DB::raw('SUM(detalle_venta.Cantidad * prenda.ValorUnitCop) as total_gastado'))
-                    ->groupBy('cliente.id', 'cliente.nombre')
-                    ->paginate(10);
+    /**
+     * @OA\Get(
+     *     path="/api/total-gastado-por-cliente",
+     *     tags={"Consultas"},
+     *     summary="Obtener total gastado por cliente",
+     *     description="Retorna el total gastado por cada cliente",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operación exitosa",
+     *     ),
+     *     @OA\Response(
+     *         response="default",
+     *         description="Ha ocurrido un error",
+     *     )
+     * )
+     */
+    public function totalGastadoPorCliente()
+    {
+        $results = $this->consultasService->totalGastadoPorCliente();
         return response()->json($results);
     }
 }
