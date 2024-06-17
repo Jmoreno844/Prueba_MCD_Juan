@@ -55,15 +55,14 @@ use Illuminate\Support\Facades\Route;
  */
 
 
-//Rutas protegias por JWT
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+
+Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
 
 
-//"auth:api"
+//auth:api
 Route::group(['middleware' => ['json.response']], function () {
-    Route::get("/check", [UserController::class, 'check'])->name("check");
 
     Route::apiResource('cargos', CargoController::class);
     Route::apiResource('clientes', ClienteController::class);
@@ -127,7 +126,7 @@ Route::group(['middleware' => ['json.response']], function () {
 
 
 Route::group(['middleware' => ['json.response']], function () {
-    Route::post("/gen_jwt", [UserController::class, 'generateJWT'])->name("gen_jwt");
+    Route::post("/generate-jwt", [UserController::class, 'generateJWT'])->name("gen_jwt");
     Route::post("/register", [UserController::class, 'register'])->name("register");
     Route::post("/login", [UserController::class, 'login'])->name("login");
 });
