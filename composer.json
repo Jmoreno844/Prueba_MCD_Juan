@@ -13,7 +13,8 @@
         "laravel/sanctum": "^2.15",
         "laravel/tinker": "^2.5",
         "pragmarx/google2fa-laravel": "^2.2",
-        "tymon/jwt-auth": "^1.0"
+        "lcobucci/jwt": "^4.0",
+        "tymon/jwt-auth": "^1.0.2"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
